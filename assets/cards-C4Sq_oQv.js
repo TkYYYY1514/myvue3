@@ -1,1 +1,0 @@
-import{a as e,i as t,l as n,o as r}from"./index-aHRVoo1f.js";var i={};function a(t,i){return n(),r(`div`,null,[...i[0]||=[e(`h2`,null,`卡片`,-1)]])}var o=t(i,[[`render`,a]]);export{o as default};
