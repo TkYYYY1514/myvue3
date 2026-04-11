@@ -14,7 +14,7 @@ export const useThemeStore = defineStore('theme',()=>{
             case 'dark':
                 isDark = true
                 break;
-            case 'anto':
+            case 'auto':
                 isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
                 break;
         }//判断白天，黑夜，自动
