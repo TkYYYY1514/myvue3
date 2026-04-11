@@ -10,7 +10,7 @@
         <div  class="right-section">
           <el-button class="menu-button" 
                 @click="toggleDark">
-                <el-icon  v-if="!themeStore.themeMode === 'dark'"><Moon /></el-icon>
+                <el-icon  v-if="themeStore.themeMode !== 'dark'"><Moon /></el-icon>
                 <el-icon v-else ><Sunny /></el-icon>
                 <!--  亮/暗主题切换 -->
             </el-button>

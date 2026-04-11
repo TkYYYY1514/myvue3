@@ -2,7 +2,7 @@ import {defineStore } from 'pinia'
 import {ref,watch} from 'vue'
 
 export const useThemeStore = defineStore('theme',()=>{
-    const themeMode = ref(localStorage.getItem('themeMode') || 'anto')
+    const themeMode = ref(localStorage.getItem('themeMode') || 'auto')
 
     const applyThem = (mode)=>{
         let isDark =false
@@ -32,7 +32,7 @@ export const useThemeStore = defineStore('theme',()=>{
         //只要themeMode改变，就会执行applyThem
 
         const setTheme = (mode)=>{
-            if(['light','dark','anto'].includes(mode)){
+            if(['light','dark','auto'].includes(mode)){
                 themeMode.value = mode
             }
         }
