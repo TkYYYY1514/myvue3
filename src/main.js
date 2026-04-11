@@ -15,6 +15,22 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
+// ---  防止主题闪烁 ---
+const savedMode = localStorage.getItem('themeMode') || 'auto'
+let isDark = false
+
+if (savedMode === 'dark') {
+  isDark = true
+} else if (savedMode === 'auto') {
+  isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+}
+
+if (isDark) {
+  document.documentElement.classList.add('dark')
+} else {
+  document.documentElement.classList.remove('dark')
+}
+
 app.use(router)
 app.use(ElementPlus)
 app.use(pinia) 

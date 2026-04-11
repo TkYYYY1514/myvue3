@@ -64,7 +64,7 @@ provide('reloadPage', reloadPage)
 <style scoped>
 /* 滚动条样式 */
 .el-aside::-webkit-scrollbar {
-    width:2px;
+    width:0.5px;
 }
 
 .el-aside {

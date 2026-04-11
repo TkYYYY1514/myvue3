@@ -36,16 +36,16 @@
 
             <el-button class="menu-button" 
                 @click="toggleDark">
-                <el-icon  v-if="!isDark"><Moon /></el-icon>
+                <el-icon  v-if="!themeStore.themeMode === 'dark'"><Moon /></el-icon>
                 <el-icon v-else ><Sunny /></el-icon>
                 <!--  亮/暗主题切换 -->
             </el-button>
 
             <el-button class="menu-button" 
-                @click="menuStore.toggleCollapse">
+                @click="goToHome">
                 <el-icon  v-if="!menuStore.isCollapse"><Setting /></el-icon>
                 <el-icon v-else ><Setting /></el-icon>
-                <!-- 设置 -->
+                <!-- 设置 (跳转首页面，测试用)-->
             </el-button>
 
             <!-- <el-avatar
@@ -81,17 +81,20 @@ import { useMenuStore } from '@/stores/menu'
 import { inject } from 'vue'
 import { ref } from 'vue'
 import { useTabsStore } from '@/stores/tabs'
-import { Fold, Moon, Sunny, FullScreen } from '@element-plus/icons-vue'
+import {  Moon, Sunny, FullScreen } from '@element-plus/icons-vue'
+import { useThemeStore } from '@/stores/theme'
+import { useRouter } from 'vue-router'
 
 const menuStore = useMenuStore()//控制菜单状态
 const isFullScreen = ref(false)//控制全屏状态
 const reloadPage = inject('reloadPage')//接受父组件方法
-
 const tabsStore = useTabsStore()//标签
+const themeStore = useThemeStore()//主题：白天黑夜
+const router = useRouter()
 
-const isDark = ref(false)//控制主题状态,亮暗
-
-
+const goToHome = () => {
+  router.push('/auth/login') 
+}
 
 const toggleFullScreen = () => {
   if (!document.fullscreenElement) {
@@ -105,17 +108,13 @@ const toggleFullScreen = () => {
   }
 }//控制全屏按钮
 
-// 切换暗黑模式
 const toggleDark = () => {
-  isDark.value = !isDark.value
-  
-  // 给 html 标签添加/移除 dark 类
-  if (isDark.value) {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.remove('dark')
-  }
-}
+    if (themeStore.themeMode === 'dark') {
+      themeStore.setTheme('light')
+    } else {
+      themeStore.setTheme('dark')
+    }
+}//控制主题模式按钮
 
 const refresh = () => {
   reloadPage() //使用父组件的方法key++，实现路由销毁->创建 //provide,inject

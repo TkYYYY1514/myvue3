@@ -23,7 +23,8 @@
             </el-form-item>
 
             <el-form-item >
-                <el-button type="primary" @click="handleLogin":loading="loginLoading"class="in1">登录</el-button>
+                <el-button type="primary" @click="handleLogin":loading="loginLoading"class="in1">
+                    {{ loginLoading ? '验证中...' : '登录' }}</el-button>
             </el-form-item>
         </el-form>
 
@@ -35,7 +36,7 @@
 
 <script setup>
 import { reactive, watch,ref  } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage,ElLoading } from 'element-plus'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -70,26 +71,41 @@ watch(() => form.region, (newregion) => {
     form.password = account.password
 })
 function goToRegister() {
-    router.push('/register')
+    router.push('/auth/register')
 }
 const handleLogin = async() => {
     //触发表单验证
     try{
         await formRef.value.validate()
 
-        loginLoading.value = true
+        loginLoading.value = true//登陆按钮圈圈
         // 模拟登录请求延迟
         setTimeout(() => {
             const account = accounts[form.region]
             if (form.username === account.username && form.password === account.password) {
+                
+                
+                loginLoading.value = false
+
                 ElMessage.success('登录成功')
+                
+                //全屏加载动画
+                const fullScreenLoading = ElLoading.service({
+                    lock: true,
+                    text: '正在进入系统...',
+                    background: 'rgba(0, 0, 0, 0.7)',
+                })
                 
                 // 延迟0.8s
                 setTimeout(() => {
-                    
+                    //关闭刚刚的动画
+                    fullScreenLoading.close()
+                    // 跳转
                     router.push('/dashboard/console')
                 }, 800)
             } else {
+                //不显示
+                loginLoading.value = false
                 ElMessage.error('账号或密码错误')
             }
             loginLoading.value = false

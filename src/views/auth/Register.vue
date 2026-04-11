@@ -78,7 +78,7 @@ const rules = {
 }
 
 const goToLogin = () => {
-    router.push('/login')
+    router.push('/auth/login')
 }
 
 const handleRegister = async () => {

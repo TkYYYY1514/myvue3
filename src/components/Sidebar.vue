@@ -1,9 +1,11 @@
 <template>
     
     
-    <el-menu :default-active="route.path" :collapse="menuStore.isCollapse" style="transition: all 0.01s ease;"
-    :unique-opened="true" router >
-        <h5 style=" text-align: center;"> Sidebar</h5>
+    
+    <el-menu :default-active="route.path" :collapse="menuStore.isCollapse" 
+    style="transition: all 0.01s ease; padding: 1px; "
+    :unique-opened="true" router  class="sidebar-menu">
+        <h5 style=" text-align: center; "> Sidebar</h5>
 
         <el-sub-menu index="submenu-1">
             <template #title>
@@ -86,5 +88,10 @@ watch(
 </script>
 
 <style  scoped>
+.sidebar-menu {
+  /* 使用 Element Plus 的阴影变量，或者自定义 */
+  box-shadow: var(--el-box-shadow-light); 
+  
+}
 
 </style>
