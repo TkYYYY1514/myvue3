@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+# 设置权限
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
