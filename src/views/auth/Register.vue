@@ -92,7 +92,7 @@ const handleRegister = async () => {
             ElMessage.success('注册成功，正在跳转登录')
             
             setTimeout(() => {
-                router.push('/login')
+                router.push('/auth/login')
             }, 800)
             
             registerLoading.value = false

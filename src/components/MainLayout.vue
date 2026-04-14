@@ -21,7 +21,7 @@
             height: auto;
             padding: 0;
             user-select: none;           
-            -webkit-ser-select: none;   
+            -webkit-user-select: none;   
             -moz-user-select: none;      
             -ms-user-select: none; " >
                 <Header />
@@ -30,9 +30,11 @@
 
             <el-main  class="view"style="padding: 5px;">
                 <!-- 路由动画核心：这里加 Transition//监听路由变化-->
-                <Transition name="slide">
-                  <router-view   :key="refreshKey" />
-                </Transition>
+                <router-view v-slot="{ Component }">
+                  <Transition name="slide" >
+                    <component :is="Component" :key="refreshKey" />
+                  </Transition>
+                </router-view>
             </el-main>
 
         </el-container>

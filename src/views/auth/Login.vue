@@ -23,7 +23,7 @@
             </el-form-item>
 
             <el-form-item >
-                <el-button type="primary" @click="handleLogin":loading="loginLoading"class="in1">
+                <el-button type="primary" @click="handleLogin":loading="loginLoading" class="in1">
                     {{ loginLoading ? '验证中...' : '登录' }}</el-button>
             </el-form-item>
         </el-form>
@@ -36,10 +36,13 @@
 
 <script setup>
 import { reactive, watch,ref  } from 'vue'
-import { ElMessage,ElLoading } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
+const userStore = useUserStore()
+
 const formRef = ref(null)
 const loginLoading = ref(false)
 
@@ -74,44 +77,27 @@ function goToRegister() {
     router.push('/auth/register')
 }
 const handleLogin = async() => {
+
+    if (!formRef.value) return
+    
     //触发表单验证
     try{
         await formRef.value.validate()
 
-        loginLoading.value = true//登陆按钮圈圈
-        // 模拟登录请求延迟
-        setTimeout(() => {
-            const account = accounts[form.region]
-            if (form.username === account.username && form.password === account.password) {
-                
-                
-                loginLoading.value = false
+        loginLoading.value = true//按钮转圈圈
 
-                ElMessage.success('登录成功')
-                
-                //全屏加载动画
-                const fullScreenLoading = ElLoading.service({
-                    lock: true,
-                    text: '正在进入系统...',
-                    background: 'rgba(0, 0, 0, 0.7)',
-                })
-                
-                // 延迟0.8s
-                setTimeout(() => {
-                    //关闭刚刚的动画
-                    fullScreenLoading.close()
-                    // 跳转
-                    router.push('/dashboard/console')
-                }, 800)
-            } else {
-                //不显示
-                loginLoading.value = false
-                ElMessage.error('账号或密码错误')
-            }
-            loginLoading.value = false
-        }, 500)
+        await userStore.loginAction({
+            username: form.username,
+            password: form.password,
+        })
+
+        ElMessage.success('登录成功')
+        router.push('/dashboard/console')
     }catch(error) {
-         console.log('校验失败', error) 
+    if (error.message) {
+    }
+}finally{
+        loginLoading.value = false
     }
     
 }

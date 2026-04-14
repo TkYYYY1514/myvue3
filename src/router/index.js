@@ -61,6 +61,14 @@ const routes = [
                 meta:{
                     title: '卡片'
                 }
+            },
+            
+            {
+                path: 'charts',
+                component: () => import('../views/template/charts.vue'),
+                meta:{
+                    title: '图表'
+                }
             }
         ]
     },//模板中心页面
@@ -71,5 +79,25 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes
 })
+
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token')
+
+    //需要认证，mainlayout下的所有路由
+    const requireAuth = to.matched.some(record => 
+        record.component?.name === 'MainLayout'||
+        to.path.startsWith('/dashboard') ||
+        to.path.startsWith('/template')    
+    )
+
+    if(requireAuth && !token){
+        //未登录跳转登陆页
+        next('/auth/login')
+    }else{
+        next()
+    }
+
+})
+
 
 export default router

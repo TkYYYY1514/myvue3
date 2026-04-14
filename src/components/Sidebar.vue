@@ -24,9 +24,7 @@
             </template>
                 <el-menu-item index="/template/cards">卡片</el-menu-item>
                 <el-menu-item index="2-2">横幅</el-menu-item>
-                <el-menu-item index="2-3">图表</el-menu-item>
-                <el-menu-item index="2-4">地图</el-menu-item>
-                <el-menu-item index="2-5">地图</el-menu-item>
+                <el-menu-item index="/template/charts">图表</el-menu-item>
                 <el-menu-item index="2-6">聊天</el-menu-item>
                 <el-menu-item index="2-7">日历</el-menu-item>
                 <el-menu-item index="2-8">定价</el-menu-item>
@@ -67,6 +65,7 @@ import { useMenuStore } from '@/stores/menu'
 import { useTabsStore } from '@/stores/tabs'
 import { useRoute} from 'vue-router'
 import { watch } from 'vue'
+
 
 const menuStore = useMenuStore()
 
