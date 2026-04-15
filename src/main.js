@@ -10,8 +10,9 @@ import 'element-plus/theme-chalk/dark/css-vars.css'//暗黑模式
 const app = createApp(App)
 const pinia = createPinia() 
 
-//引入mock数据（生产环境也需要）
-import './mock'
+if (import.meta.env.DEV) {
+  import('./mock')
+}//引入mock数据
 
 // 全局注册所有图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
