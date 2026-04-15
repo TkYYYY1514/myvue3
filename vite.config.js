@@ -6,7 +6,8 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue(),
   ],
-  base: '/myvue3/',
+  // 根据环境变量动态设置base：GitHub Pages用'/myvue3/'，其他平台用'/'
+  base: process.env.DEPLOY_TARGET === 'github' ? '/myvue3/' : '/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
