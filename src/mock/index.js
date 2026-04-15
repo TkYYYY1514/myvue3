@@ -1,5 +1,9 @@
 import Mock from 'mockjs'
 
+// if (import.meta.env.PROD) {
+//     throw new Error('Mock 数据不应该在生产环境中被引入')
+// }
+
 // 模拟用户数据
 const users =[
     {
