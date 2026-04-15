@@ -76,11 +76,12 @@ provide('reloadPage', reloadPage)
 
 
 
-
+/* 禁止滚动 */
 .el-main {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden !important;
 }
+
+
 /* 隐藏滚动条/横轴 */
 /* 动画由 Transition 自动控制 */
 .slide-enter-from { opacity: 0; transform: translateX(30px); }

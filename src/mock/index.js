@@ -58,3 +58,40 @@ Mock.mock(/\/api\/auth\/login/,'post',(options) =>{
         }
     }
 })
+
+const allUsers = Mock.mock({
+    'list|1000': [ 
+        {
+            'id|+1': 1,
+            'date': '@date("yyyy-MM-dd HH:mm:ss")',
+            'name': '@cname',
+            'address': '@county(true)'
+        }
+    ]
+}).list;
+
+
+Mock.mock(/\/api\/user\/list/,'get',(options) =>{
+    const url = new URL(options.url,window.location.origin)
+        
+    //默认第一页
+    const page = parseInt(url.searchParams.get('page') || 1)
+    //默认每页20条
+    const pageSize = parseInt(url.searchParams.get('pageSize') || 20)
+
+    //计算分页位置
+    const start = (page - 1) * pageSize
+    const end = start + pageSize
+
+    //从总数据中截取当前页的数据
+    const pageData = allUsers.slice(start,end)
+   
+    return {
+        code: 200,
+        message: '获取成功',
+        data: {
+            list: pageData,       // 当前页的列表
+            total: allUsers.length // 总条数（前端分页组件需要这个来算有多少页）
+        }
+    };
+});

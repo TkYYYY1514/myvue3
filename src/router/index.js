@@ -72,6 +72,28 @@ const routes = [
             }
         ]
     },//模板中心页面
+
+    {
+        path: '/system',
+        component: MainLayout,
+        children: [
+            {
+                path: 'user',
+                component: () => import('../views/system/user.vue'),
+                meta:{
+                    title: '用户管理'
+                }
+            },
+            
+            {
+                path: 'role',
+                component: () => import('../views/system/role.vue'),
+                meta:{
+                    title: '角色管理'
+                }
+            }
+        ]
+    },
     
 ]
 

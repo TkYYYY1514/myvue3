@@ -49,8 +49,8 @@
                 <el-icon><User /></el-icon>
                 <span>系统管理</span>
             </template>
-                <el-menu-item index="4-1">用户管理</el-menu-item>
-                <el-menu-item index="4-2">角色管理</el-menu-item>
+                <el-menu-item index="/system/user">用户管理</el-menu-item>
+                <el-menu-item index="/system/role">角色管理</el-menu-item>
                 
         </el-sub-menu>
 
