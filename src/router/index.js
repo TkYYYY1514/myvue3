@@ -1,124 +1,67 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import AuthLayout from '../views/auth/AuthLayout.vue'
-import MainLayout from '../components/MainLayout.vue'
-const routes = [
-    {
-        path: '/',
-        redirect: '/auth/login'
-    },//重定向默认路由
-
-    {
-        path: '/auth',
-        component: AuthLayout,
-        children: [
-            {
-                path: 'login',
-                component: () => import('../views/auth/Login.vue')
-            },
-            {
-                path: 'register',
-                component: () => import('../views/auth/Register.vue')
-            }
-        ]
-    },//登陆注册路由
-
-    {
-        path: '/dashboard',
-        component: MainLayout,
-        children: [
-            {
-                path: 'console',
-                component: () => import('../views/dashboard/console.vue'),
-                meta:{
-                    title: '工作台'
-                }
-            },
-            {
-                path: 'analysis',
-                component: () => import('../views/dashboard/analysis.vue'),
-                meta:{
-                    title: '分析页'
-                }
-            },
-            {
-                path: 'ecommerce',
-                component: () => import('../views/dashboard/ecommerce.vue'),
-                meta:{
-                    title: '电子商务'
-                }
-            }
-
-        ]
-    },//仪表盘页面
-
-    {
-        path: '/template',
-        component: MainLayout,
-        children: [
-            {
-                path: 'cards',
-                component: () => import('../views/template/cards.vue'),
-                meta:{
-                    title: '卡片'
-                }
-            },
-            
-            {
-                path: 'charts',
-                component: () => import('../views/template/charts.vue'),
-                meta:{
-                    title: '图表'
-                }
-            }
-        ]
-    },//模板中心页面
-
-    {
-        path: '/system',
-        component: MainLayout,
-        children: [
-            {
-                path: 'user',
-                component: () => import('../views/system/user.vue'),
-                meta:{
-                    title: '用户管理'
-                }
-            },
-            
-            {
-                path: 'role',
-                component: () => import('../views/system/role.vue'),
-                meta:{
-                    title: '角色管理'
-                }
-            }
-        ]
-    },
-    
-]
+import { constantRoutes } from './constant'
+import { usePermissionStore } from '@/stores/permission'
 
 const router = createRouter({
     history: createWebHashHistory(),
-    routes
+    routes: constantRoutes  // 初始只挂载静态路由
 })
 
-router.beforeEach((to, from, next) => {
+// 白名单：不需要登录就能访问的页面
+const whiteList = ['/auth/login', '/auth/register']
+
+router.beforeEach((to, from) => {
     const token = localStorage.getItem('token')
+    const permissionStore = usePermissionStore()
+    
+    if (token) {
+        // 已登录
+        if (to.path === '/auth/login') {
+            // 如果已登录还访问登录页，重定向到首页
+            return '/dashboard/console'
+        } else {
+            // 检查是否已加载动态路由
+            if (permissionStore.routes.length === 0) {
+                // 从 localStorage 恢复权限（简化版）
+                const savedPermissions = JSON.parse(localStorage.getItem('user_permissions') || '[]')
 
-    //需要认证，mainlayout下的所有路由
-    const requireAuth = to.matched.some(record => 
-        record.component?.name === 'MainLayout'||
-        to.path.startsWith('/dashboard') ||
-        to.path.startsWith('/template')    
-    )
-
-    if(requireAuth && !token){
-        //未登录跳转登陆页
-        next('/auth/login')
-    }else{
-        next()
+                if (savedPermissions.length > 0) {
+                    // 重新初始化权限 Store
+                    permissionStore.setPermissions(savedPermissions)
+                    
+                    // 重新添加动态路由
+                    permissionStore.routes.forEach(route => {
+                        router.addRoute(route)
+                    })
+                    
+                    // 添加 404 兜底
+                    router.addRoute({ 
+                        path: '/:pathMatch(.*)*', 
+                        name: 'NotFound',
+                        redirect: '/404' 
+                    })
+                    
+                    // 重入当前路由
+                    return { ...to, replace: true }
+                } else {
+                    // 没有保存的权限，跳转登录
+                    localStorage.removeItem('token')
+                    return '/auth/login'
+                }
+            } else {
+                return true
+            }
+        }
+    } else {
+        // 未登录
+        if (whiteList.includes(to.path)) {
+            // 在白名单中，允许访问
+            return true
+        } else {
+            // 不在白名单，跳转登录页
+            return `/auth/login?redirect=${to.path}`
+        }
     }
-
 })
 
 

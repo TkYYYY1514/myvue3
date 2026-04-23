@@ -5,19 +5,19 @@
         <el-aside  :width="menuStore.isCollapse ? '64px' : '200px'"
         style="
         transition: width 0.3s ease;
-        
-
         user-select: none;           
         -webkit-ser-select: none;   
         -moz-user-select: none;      
-        -ms-user-select: none;  ">
+        -ms-user-select: none;  "
+        v-show = "xo">
         <!-- 字体无法选中样式 -->
             <Sidebar />
         </el-aside>
         
         
         <el-container style="flex: 1; min-width: 0; transition: all 0.3s ease;">
-            <el-header style="
+            <el-header v-show = "xo"
+            style="
             height: auto;
             padding: 0;
             user-select: none;           
@@ -27,8 +27,8 @@
                 <Header />
             </el-header>
             
-
-            <el-main  class="view"style="padding: 5px;">
+            <!-- background-color: red; -->
+            <el-main  class="view"style="padding: 5px;margin : 0px 5px; ">
                 <!-- 路由动画核心：这里加 Transition//监听路由变化-->
                 <router-view v-slot="{ Component }">
                   <Transition name="slide" >
@@ -52,15 +52,21 @@ const menuStore = useMenuStore()
 import { ref, provide } from 'vue'
 
 const refreshKey = ref(0)
-
+const xo = ref(true)
 // 刷新方法
 const reloadPage = () => {
   refreshKey.value++
 }
 
+const xx = () => {
+  xo.value=!xo.value;
+}//控制侧边与导航栏的显示隐藏
+
 // 交给 header 使用
 provide('reloadPage', reloadPage)
 
+// 交给 user。vue 使用
+provide('xx', xx)
 </script>
 
 <style scoped>
@@ -76,10 +82,14 @@ provide('reloadPage', reloadPage)
 
 
 
-/* 禁止滚动 */
+
 .el-main {
-  overflow: hidden !important;
+  scrollbar-width: thin; /* 细滚动条 */
+  
 }
+
+
+
 
 
 /* 隐藏滚动条/横轴 */

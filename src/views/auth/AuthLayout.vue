@@ -14,9 +14,13 @@
                 <el-icon v-else ><Sunny /></el-icon>
                 <!--  亮/暗主题切换 -->
             </el-button>
+
+            <router-view v-slot="{ Component }">
             <Transition name="form-slide" mode="out-in">
-              <router-view :key="$route.fullPath" class="form-slide-in"/>
+              <component :is="Component" :key="$route.fullPath" class="form-slide-in" />
             </Transition>
+          </router-view>
+          
         </div>
 
     </div>

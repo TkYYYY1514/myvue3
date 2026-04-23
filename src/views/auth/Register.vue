@@ -6,7 +6,9 @@
             <h1>注册新账号</h1>
             <p>填写信息完成注册</p>
             <el-form-item prop="username"class = 'in1'>
-                <el-input v-model="form.username" placeholder="请输入用户名" />
+                <el-input v-model="form.username"
+                 placeholder="请输入用户名"
+                 @keyup.enter="handleRegister"  />
             </el-form-item>
 
             <el-form-item  prop="password"class = 'in1'>
@@ -15,6 +17,7 @@
                     type="password"
                     placeholder="请输入密码（至少6位）"
                     show-password
+                    @keyup.enter="handleRegister" 
                 />
             </el-form-item>
 
@@ -24,6 +27,7 @@
                     type="password"
                     placeholder="请再次输入密码"
                     show-password
+                    @keyup.enter="handleRegister" 
                 />
             </el-form-item>
 

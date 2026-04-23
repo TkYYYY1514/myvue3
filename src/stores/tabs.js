@@ -8,6 +8,11 @@ export const useTabsStore = defineStore('tabs',()=>{
     const tabsList = ref([])
     const activeTab = ref('')
 
+    //清空标签
+    const clearTabs = () => {
+        tabsList.value = []
+        activeTab.value = ''
+    }
     const addTab = (route) => {
         if (tabsList.value.some(item=>item.path === route.path)) {
             // 标签已存在，切换激活状态
@@ -42,6 +47,7 @@ export const useTabsStore = defineStore('tabs',()=>{
         activeTab,
         addTab,
         clickTab,
-        removeTab
+        removeTab,
+        clearTabs
     }
 })

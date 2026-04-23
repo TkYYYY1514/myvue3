@@ -1,19 +1,20 @@
 import { defineStore } from "pinia"
 import { login} from "@/api/auth"
+import { usePermissionStore } from '@/stores/permission'
 
 export const useUserStore = defineStore('user',{ 
     state:()=>({
         token:'',
-        roles:[],
+        permissions:[],
         username:''
     }),
     actions:{
         async loginAction(loginForm){
             const res = await login(loginForm)  
-            const {token,roles,username} = res.data
+            const {token,permissions,username} = res.data
 
             this.token = token
-            this.roles = roles
+            this.permissions = permissions
             this.username = username
             localStorage.setItem('token',token)
             //保存token到本地
@@ -22,11 +23,14 @@ export const useUserStore = defineStore('user',{
         },
 
         logouAction(){
+            const permissionStore = usePermissionStore()
+            permissionStore.clearPermissions()
             this.token = ''
-            this.roles = []
+            this.permissions = []
             this.username = ''
             localStorage.removeItem('token')
-            //登出：清除token
+            
+            localStorage.removeItem('user_permissions')
         }
     }
 
