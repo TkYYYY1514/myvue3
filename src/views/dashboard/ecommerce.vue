@@ -29,7 +29,6 @@ import  TaskButton  from './TaskButton.vue'
 import  StudentCard  from './StudentCard.vue'
 import  LikeButton  from './LikeButton.vue'
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 
  const tasks = ref([])
 const number = ref(0)
