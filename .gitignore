@@ -14,6 +14,11 @@ dist-ssr
 coverage
 *.local
 
+# ============ 环境变量 ============
+.env                  
+.env.local
+.env.*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -37,3 +42,16 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# ============ 后端 ============
+# 后端环境变量
+backend/.env
+backend/.env.local
+backend/.env.*.local
+
+# 后端依赖
+backend/node_modules
+
+# 后端日志
+backend/logs/
+backend/*.log
