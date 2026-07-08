@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, defineExpose, onMounted } from 'vue';
+import { ref, reactive, watch, onMounted } from 'vue';
 const props = defineProps({
     //表单字段配置数组
     schemas: {

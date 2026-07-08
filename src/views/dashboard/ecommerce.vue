@@ -51,7 +51,7 @@ const number = ref(0)
 }
 
 
-.p1{
+/* .p1{
  
-}
+} */
 </style>

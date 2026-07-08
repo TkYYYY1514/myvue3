@@ -2,7 +2,7 @@
     <div class="auth-container">
         <!-- 左侧页面 -->
         <div class = "left-section">
-             <h1>项目管理平台</h1>
+             <h1>OuO</h1>
             <div></div>
         </div>
 

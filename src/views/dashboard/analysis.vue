@@ -57,8 +57,8 @@ const chartb = ref({
   height: 1600px;
   
 }
-.chart{
+/* .chart{
    
-}
+} */
 
 </style>
