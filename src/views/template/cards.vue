@@ -16,7 +16,7 @@
   /* 让 iframe 占满页面，显示完整的 DeepSeek 界面 */
   .deepseek-iframe {
     width: 100%;
-    height: calc(100vh - 120px); /* 根据你的页面布局调整高度 */
+    height: calc(100vh); /* 根据你的页面布局调整高度 */
     border: none;
     border-radius: 8px;
     background: #fff;

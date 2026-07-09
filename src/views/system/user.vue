@@ -33,7 +33,7 @@
 
 
                 <el-button class="menu-button" 
-                    @click="xo">
+                @click="menuStore.toggleHidden()">
                     <el-icon ><FullScreen /></el-icon>
                     <!--  全屏 -->
                 </el-button>
@@ -182,6 +182,11 @@ import BaseForm from '@/components/common/BaseForm.vue';
 import { userFormSchemas } from '@/utils/userForm';//表单及其配置
 import { getUserList, addUser, updateUser, deleteUser } from '@/api/user';//用户相关API
 
+
+import { useMenuStore } from '@/stores/menu'
+const menuStore = useMenuStore()
+
+
 // 动态生成表单配置，根据 isEdit 状态调整密码字段的规则
 const dynamicSchemas = computed(() => {
   return userFormSchemas.map(item => {
@@ -190,7 +195,6 @@ const dynamicSchemas = computed(() => {
   });
 });
 
-const xo = inject('xx')
 const userData = ref([])
 const loading = ref(false)
 

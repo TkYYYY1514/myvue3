@@ -9,14 +9,14 @@
         -webkit-ser-select: none;   
         -moz-user-select: none;      
         -ms-user-select: none;  "
-        v-show = "xo">
+        v-show="!menuStore.isHidden">
         <!-- 字体无法选中样式 -->
             <Sidebar />
         </el-aside>
         
         
         <el-container style="flex: 1; min-width: 0; transition: all 0.3s ease;">
-            <el-header v-show = "xo"
+            <el-header v-show="!menuStore.isHidden"
             style="
             height: auto;
             padding: 0;
@@ -52,21 +52,14 @@ const menuStore = useMenuStore()
 import { ref, provide } from 'vue'
 
 const refreshKey = ref(0)
-const xo = ref(true)
 // 刷新方法
 const reloadPage = () => {
   refreshKey.value++
 }
 
-const xx = () => {
-  xo.value=!xo.value;
-}//控制侧边与导航栏的显示隐藏
-
 // 交给 header 使用
 provide('reloadPage', reloadPage)
 
-// 交给 user。vue 使用
-provide('xx', xx)
 </script>
 
 <style scoped>

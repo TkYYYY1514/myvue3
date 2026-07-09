@@ -4,9 +4,8 @@
             <el-button @click="handleAdd">添加</el-button>
 
             <el-button class="menu-button" 
-               @click="xo">
-               <el-icon  v-if="!isFullScreen"><FullScreen /></el-icon>
-               <el-icon v-else ><Close /></el-icon>
+            @click="menuStore.toggleHidden()">
+               <el-icon ><FullScreen /></el-icon>
                <!--  全屏 -->
            </el-button>
 
@@ -87,7 +86,9 @@ import {  FullScreen,Close  } from '@element-plus/icons-vue'
 import BaseForm from '@/components/common/BaseForm.vue'; 
 import { roleFormSchemas } from '@/utils/roleForm.js';//表单及其配置
 
-const xo = inject('xx')
+import { useMenuStore } from '@/stores/menu'
+const menuStore = useMenuStore()
+
 const userData = ref([])
 const loading = ref(false)
 

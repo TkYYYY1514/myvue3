@@ -10,6 +10,10 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs' //中文包
 import VueVirtualScroller from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import vCountTo from './directives/vCountTo'
+
+// ============ 新增：导入 highlight.js 样式 ============
+import 'highlight.js/styles/github-dark.css'
+
 const app = createApp(App)
 const pinia = createPinia() 
 

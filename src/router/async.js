@@ -56,6 +56,11 @@ export const asyncRouteTemplates ={
                 name:'charts',
                  component: () => import('@/views/template/charts.vue'), 
                  meta: { title: '分析页' } 
+            },
+            {   path: 'aichat',
+                name:'aichat',
+                 component: () => import('@/views/template/AiChat/Index.vue'), 
+                 meta: { title: 'AI交流' } 
             }
         ]
     },
