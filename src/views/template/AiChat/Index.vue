@@ -26,20 +26,18 @@
       :render-markdown="renderMarkdown"
       :format-time="formatTime"
       @send-quick-question="handleQuickQuestion"
+      @scroll-state="onScrollState"
     />
 
-    <!-- 滚动到底部按钮 - absolute 定位在 chat-main 内 -->
-    <transition name="fade">
-      <div
-        v-if="showScrollButton"
-        class="scroll-to-bottom-btn"
-        @click="doScrollToBottom"
-        title="滚动到底部"
-      >
-        <el-icon><ArrowDown /></el-icon>
-        <span v-if="newMessageCount > 0" class="badge">{{ newMessageCount }}</span>
-      </div>
-    </transition>
+    <!-- 滚动到底部按钮 -->
+    <div
+      v-if="showScrollButton"
+      class="scroll-to-bottom-btn"
+      @click="doScrollToBottom"
+      title="滚动到底部"
+    >
+      <el-icon><ArrowDown /></el-icon>
+    </div>
 
     <ChatInput
       v-model="inputText"
@@ -52,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { useMenuStore } from '@/stores/menu'
 import { useChat } from './composables/useChat'
@@ -86,54 +84,32 @@ const {
 // ========== 滚动控制 ==========
 const messageListRef = ref(null)
 const showScrollButton = ref(false)
-const newMessageCount = ref(0)
-let lastMessageCount = 0
 
 const doScrollToBottom = () => {
   messageListRef.value?.scrollToBottom()
   showScrollButton.value = false
-  newMessageCount.value = 0
-  lastMessageCount = messages.value.length
 }
 
-// 发送消息时触发自动滚动
+const onScrollState = (atBottom) => {
+  showScrollButton.value = !atBottom
+}
+
+// 发送消息时，仅首次和完成时触发滚动
 const handleSend = () => {
   sendMessage(() => {
     messageListRef.value?.scrollToBottom()
-    showScrollButton.value = false
-    newMessageCount.value = 0
-    lastMessageCount = messages.value.length
   })
 }
 
 const handleQuickQuestion = (text) => {
   sendQuickQuestion(text, () => {
     messageListRef.value?.scrollToBottom()
-    showScrollButton.value = false
-    newMessageCount.value = 0
-    lastMessageCount = messages.value.length
   })
 }
-
-// 监听消息数量变化
-watch(() => messages.value.length, (newLen, oldLen) => {
-  if (newLen <= oldLen) return
-  const el = messageListRef.value?.messageListRef
-  if (!el) return
-
-  const { scrollTop, scrollHeight, clientHeight } = el
-  const atBottom = scrollHeight - scrollTop - clientHeight < 10
-
-  if (!atBottom) {
-    showScrollButton.value = true
-    newMessageCount.value = newLen - lastMessageCount
-  }
-})
 
 onMounted(() => {
   loadFromLocal()
   checkHealth()
-  lastMessageCount = messages.value.length
 })
 </script>
 
@@ -142,7 +118,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 95%;
-  background: #f7f8fa;
+  background: var(--chat-bg, #f7f8fa);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
@@ -152,71 +128,76 @@ onMounted(() => {
 /* ========== 滚动到底部按钮 ========== */
 .scroll-to-bottom-btn {
   position: absolute;
-  bottom: 16px;
+  bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  width: 48px;
-  height: 48px;
-  background: #ffffff;
+  width: 40px;
+  height: 40px;
+  background: var(--chat-card-bg, #ffffff);
   border-radius: 50%;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  color: #4f6ef7;
-  font-size: 20px;
+  color: var(--chat-text-secondary, #666);
+  font-size: 18px;
   z-index: 50;
   user-select: none;
+  transition: box-shadow 0.2s;
 }
 
 .scroll-to-bottom-btn:hover {
-  background: #4f6ef7;
-  color: #ffffff;
-  transform: translateX(-50%) scale(1.1);
-  box-shadow: 0 6px 24px rgba(79, 110, 247, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  color: #4f6ef7;
+}
+</style>
+
+<style>
+/* ========== 主题变量 ========== */
+:root {
+  --chat-bg: #f7f8fa;
+  --chat-card-bg: #ffffff;
+  --chat-text: #1a1a1a;
+  --chat-text-secondary: #666;
+  --chat-text-muted: #8c8f9c;
+  --chat-border: rgba(232, 236, 241, 0.5);
+  --chat-user-bg: #e8edff;
+  --chat-input-bg: #ffffff;
+  --chat-input-border: #d0d5dd;
+  --chat-panel-bg: #ffffff;
+  --chat-panel-border: #f0f0f0;
+  --chat-overlay: rgba(0, 0, 0, 0.2);
+  --chat-scrollbar: #d0d5dd;
+  --chat-scrollbar-hover: #b0b3be;
+  --chat-markdown-bg: #ffffff;
+  --chat-code-bg: #0d1117;
+  --chat-code-text: #e6edf3;
+  --chat-code-label: #8b949e;
+  --chat-blockquote-bg: #f0f2f8;
+  --chat-inline-code-bg: #f0f2f8;
 }
 
-.scroll-to-bottom-btn:active {
-  transform: translateX(-50%) scale(0.95);
-}
-
-.scroll-to-bottom-btn .badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  background: #f56c6c;
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: bold;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #ffffff;
-  animation: badgePulse 1.5s ease-in-out infinite;
-}
-
-@keyframes badgePulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-/* 按钮淡入淡出动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateX(-50%) scale(0.8) translateY(10px);
+html.dark {
+  --chat-bg: #1a1a2e;
+  --chat-card-bg: #2d2d4a;
+  --chat-text: #e6edf3;
+  --chat-text-secondary: #b0b3be;
+  --chat-text-muted: #6b6f8a;
+  --chat-border: rgba(255, 255, 255, 0.06);
+  --chat-user-bg: #3d3d6b;
+  --chat-input-bg: #2d2d4a;
+  --chat-input-border: #3d3d6b;
+  --chat-panel-bg: #2d2d4a;
+  --chat-panel-border: rgba(255, 255, 255, 0.06);
+  --chat-overlay: rgba(0, 0, 0, 0.5);
+  --chat-scrollbar: #3d3d6b;
+  --chat-scrollbar-hover: #5a5a8a;
+  --chat-markdown-bg: #2d2d4a;
+  --chat-code-bg: #0a0a1a;
+  --chat-code-text: #e6edf3;
+  --chat-code-label: #6b6f8a;
+  --chat-blockquote-bg: rgba(79, 110, 247, 0.12);
+  --chat-inline-code-bg: rgba(255, 255, 255, 0.08);
 }
 </style>

@@ -6,7 +6,40 @@ import { aiApi } from '@/api/ai'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 
-// 配置 marked 使用 highlight.js
+// 自定义 renderer：代码块高亮 + 左上角语言标签
+// 兼容 marked v4 (code, lang) 和 v5+ ({ text, lang }) 两种 API
+const renderer = new marked.Renderer()
+renderer.code = function (...args) {
+  let code = ''
+  let lang = ''
+  if (args.length === 1 && typeof args[0] === 'object') {
+    // marked v5+: 接收 { text, lang }
+    code = args[0].text || ''
+    lang = args[0].lang || ''
+  } else {
+    // marked v4: 接收 (code, lang)
+    code = args[0] || ''
+    lang = args[1] || ''
+  }
+
+  const langAttr = lang ? ` data-lang="${lang}"` : ''
+  let highlighted = code
+  if (lang && hljs.getLanguage(lang)) {
+    try {
+      highlighted = hljs.highlight(code, { language: lang }).value
+    } catch (e) {
+      console.error('Highlight error:', e)
+    }
+  } else {
+    try {
+      highlighted = hljs.highlightAuto(code).value
+    } catch (e) {
+      console.error('Auto highlight error:', e)
+    }
+  }
+  return `<pre${langAttr}><code class="language-${lang || ''}">${highlighted}</code></pre>`
+}
+
 marked.setOptions({
   gfm: true,
   breaks: true,
@@ -14,22 +47,7 @@ marked.setOptions({
   sanitize: false,
   smartLists: true,
   smartypants: false,
-  highlight: function (code, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return hljs.highlight(code, { language: lang }).value
-      } catch (e) {
-        console.error('Highlight error:', e)
-      }
-    }
-    try {
-      const autoResult = hljs.highlightAuto(code)
-      return autoResult.value
-    } catch (e) {
-      console.error('Auto highlight error:', e)
-      return code
-    }
-  }
+  renderer
 })
 
 const STORAGE_KEY = 'ai_chat_history'
@@ -41,7 +59,6 @@ export function useChat() {
   const isLoading = ref(false)
   const isConnected = ref(false)
   const showSystemPrompt = ref(false)
-  const activeCollapse = ref(['system'])
   const systemPrompt = ref(localStorage.getItem('ai_system_prompt') || '')
 
   // 快捷问题
@@ -156,8 +173,6 @@ export function useChat() {
             saveToLocal()
           }
         }, 2000)
-
-        scrollCallback?.()
       },
       // 完成回调
       () => {
@@ -222,7 +237,6 @@ export function useChat() {
     isLoading,
     isConnected,
     showSystemPrompt,
-    activeCollapse,
     systemPrompt,
     quickQuestions,
 

@@ -5,8 +5,12 @@ import { rolePermissionsMap } from '../config'
 // 生成随机角色
 function getRandomRoles() {
     const count = Math.floor(Math.random() * 2) + 1
-    const shuffled = [...rolePool].sort(() => 0.5 - Math.random())
-    return shuffled.slice(0, count)
+    
+    // 过滤掉超级管理员（R_SUPER）
+     const availableRoles = rolePool.filter(role => role.roleCode !== 'R_SUPER')
+
+     const shuffled = [...availableRoles].sort(() => 0.5 - Math.random())
+     return shuffled.slice(0, count)
 }
 
 // 固定管理员账号

@@ -3,16 +3,23 @@
     <div class="header-content">
       <div class="header-left">
         <div class="logo">
-          <el-tag class="menu-button" type="primary">DeepSeek</el-tag>
+          <el-tag 
+          
+          class="menu-button" type="primary">DeepSeek</el-tag>
         </div>
         <div class="header-actions">
-          <el-button class="menu-button" @click="$emit('toggle-system-prompt')" title="系统提示词">
+          <!-- circle  圆形按钮属性 -->
+          <el-button class="menu-button" 
+          
+          @click="$emit('toggle-system-prompt')" title="系统提示词">
             <el-icon><Setting /></el-icon>
           </el-button>
-          <el-button class="menu-button" @click="$emit('clear-messages')" title="清空对话">
+          <el-button class="menu-button" 
+          @click="$emit('clear-messages')" title="清空对话">
             <el-icon><Delete /></el-icon>
           </el-button>
-          <el-button  class="menu-button" @click="$emit('toggle-sidebar')" title="隐藏侧边栏">
+          <el-button  class="menu-button" 
+          @click="$emit('toggle-sidebar')" title="隐藏侧边栏">
             <el-icon><FullScreen /></el-icon>
           </el-button>
         </div>
@@ -45,7 +52,7 @@ defineEmits(['toggle-system-prompt', 'clear-messages', 'toggle-sidebar'])
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgba(232, 236, 241, 0.5);
+  border-bottom: 1px solid var(--chat-border, rgba(232, 236, 241, 0.5));
 }
 
 .header-content {
@@ -68,7 +75,7 @@ defineEmits(['toggle-system-prompt', 'clear-messages', 'toggle-sidebar'])
   gap: 8px;
   font-weight: 600;
   font-size: 16px;
-  color: #1a1a1a;
+  color: var(--chat-text, #1a1a1a);
 }
 
 .header-actions {
@@ -84,6 +91,6 @@ defineEmits(['toggle-system-prompt', 'clear-messages', 'toggle-sidebar'])
 
 .msg-count {
   font-size: 12px;
-  color: #8c8f9c;
+  color: var(--chat-text-muted, #8c8f9c);
 }
 </style>

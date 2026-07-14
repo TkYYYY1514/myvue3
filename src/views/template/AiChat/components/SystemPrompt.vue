@@ -49,7 +49,7 @@ defineEmits(['update:modelValue', 'save', 'reset', 'close'])
 .system-prompt-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--chat-overlay, rgba(0, 0, 0, 0.2));
   z-index: 100;
   display: flex;
   justify-content: flex-end;
@@ -58,7 +58,7 @@ defineEmits(['update:modelValue', 'save', 'reset', 'close'])
 .system-prompt-panel {
   width: 340px;
   height: 100%;
-  background: #ffffff;
+  background: var(--chat-panel-bg, #ffffff);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -66,12 +66,8 @@ defineEmits(['update:modelValue', 'save', 'reset', 'close'])
 }
 
 @keyframes panelIn {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
 .panel-header {
@@ -79,7 +75,7 @@ defineEmits(['update:modelValue', 'save', 'reset', 'close'])
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--chat-panel-border, #f0f0f0);
   flex-shrink: 0;
 }
 
@@ -89,7 +85,7 @@ defineEmits(['update:modelValue', 'save', 'reset', 'close'])
   gap: 8px;
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--chat-text, #1a1a1a);
 }
 
 .panel-body {
@@ -98,21 +94,20 @@ defineEmits(['update:modelValue', 'save', 'reset', 'close'])
   overflow-y: auto;
 }
 
-.panel-body .el-textarea {
-  height: 90%;
-}
-
 .panel-body :deep(.el-textarea__inner) {
   min-height: 200px;
   resize: vertical;
   font-size: 14px;
   line-height: 1.7;
+  background: var(--chat-input-bg, #ffffff);
+  color: var(--chat-text, #1a1a1a);
+  border-color: var(--chat-input-border, #d0d5dd);
 }
 
 .prompt-hint {
   margin-top: 12px;
   font-size: 12px;
-  color: #8c8f9c;
+  color: var(--chat-text-muted, #8c8f9c);
   line-height: 1.6;
 }
 
@@ -121,19 +116,13 @@ defineEmits(['update:modelValue', 'save', 'reset', 'close'])
   justify-content: flex-end;
   gap: 8px;
   padding: 12px 20px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--chat-panel-border, #f0f0f0);
   flex-shrink: 0;
 }
 
 /* 入场/离场动画 */
-.slide-fade-enter-active {
-  transition: opacity 0.2s ease;
-}
-.slide-fade-leave-active {
-  transition: opacity 0.15s ease;
-}
+.slide-fade-enter-active { transition: opacity 0.2s ease; }
+.slide-fade-leave-active { transition: opacity 0.15s ease; }
 .slide-fade-enter-from,
-.slide-fade-leave-to {
-  opacity: 0;
-}
+.slide-fade-leave-to { opacity: 0; }
 </style>

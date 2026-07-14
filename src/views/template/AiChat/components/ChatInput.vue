@@ -21,11 +21,13 @@
           <el-icon><Promotion /></el-icon>
         </el-button>
       </div>
+      
       <div class="footer-info">
         <span v-if="hasSystemPrompt">自定义提示词已启用</span>
         <span v-else>AI 回复由 DeepSeek 提供</span>
         <span>{{ messageCount }} 条消息</span>
       </div>
+
     </div>
   </footer>
 </template>
@@ -68,7 +70,7 @@ defineExpose({ inputRef, autoResize })
   flex-shrink: 0;
   background: transparent;
   padding: 8px 24px 16px;
-  border-top: 1px solid rgba(232, 236, 241, 0.5);
+  border-top: 1px solid var(--chat-border, rgba(232, 236, 241, 0.5));
 }
 
 .footer-content {
@@ -93,9 +95,10 @@ defineExpose({ inputRef, autoResize })
   border-radius: 8px;
   font-size: 14px;
   padding: 10px 14px;
-  border-color: #d0d5dd;
-  background: #ffffff;
+  border-color: var(--chat-input-border, #d0d5dd);
+  background: var(--chat-input-bg, #ffffff);
   transition: border-color 0.2s;
+  color: var(--chat-text, #1a1a1a);
 }
 
 .input-wrapper .el-textarea :deep(.el-textarea__inner:focus) {
@@ -127,6 +130,6 @@ defineExpose({ inputRef, autoResize })
   justify-content: space-between;
   margin-top: 8px;
   font-size: 12px;
-  color: #b0b3be;
+  color: var(--chat-text-muted, #b0b3be);
 }
 </style>

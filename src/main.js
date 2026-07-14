@@ -10,9 +10,14 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs' //中文包
 import VueVirtualScroller from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import vCountTo from './directives/vCountTo'
+import ECharts from '@/components/common/ECharts.vue'
 
 // ============ 新增：导入 highlight.js 样式 ============
 import 'highlight.js/styles/github-dark.css'
+
+// ============ 新增：导入 GridStack ============
+import VueGridstack from 'vue-gridstack'
+import 'gridstack/dist/gridstack.min.css'
 
 const app = createApp(App)
 const pinia = createPinia() 
@@ -25,6 +30,10 @@ import permission from './directives/permission'
 
 import './mock'
 
+app.component('ECharts', ECharts)
+
+// ============ 新增：全局注册 GridStack ============
+app.use(VueGridstack)
 
 app.directive('count-to', vCountTo)
 //动态数字滚动效果指令

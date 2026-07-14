@@ -2,8 +2,7 @@
     <div class="auth-container">
         <!-- 左侧页面 -->
         <div class = "left-section">
-             <h1>OuO</h1>
-            <div></div>
+          <div ref="chartRef" class="title-chart"></div>
         </div>
 
         <!-- 右侧表单 -->
@@ -27,6 +26,9 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+import * as echarts from 'echarts'
+
 import { useThemeStore } from '@/stores/theme'
 const themeStore = useThemeStore()
 
@@ -37,9 +39,64 @@ const toggleDark = () => {
       themeStore.setTheme('dark')
     }
 }//控制暗黑模式按钮
+
+// 标题逐字效果
+const chartRef = ref(null)
+let chart = null
+
+onMounted(() => {
+  chart = echarts.init(chartRef.value)
+
+  // ===== 逐字配置 =====
+  const text = 'OuO'
+  const chars = text.split('')  // ['O', 'u', 'O']
+  const baseDelay = 700  // 每个字间隔 700
+
+  const elements = chars.map((char, index) => ({
+    type: 'text',
+    left: `${20 + index * 30}%`,  // 每个字水平位置
+    top: 'center',
+    style: {
+      text: char,
+      fontSize: 80,
+      fontWeight: 'bold',
+      fill: 'transparent',
+      stroke: '#1a73e8',
+      lineWidth: 2,
+      lineDash: [0, 100],
+      lineDashOffset: 0
+    },
+    keyframeAnimation: {
+      duration: 1000,
+      // loop: true,  //循环播放
+      delay: index * baseDelay,  // ← 每个字延迟不同
+      keyframes: [
+        { percent: 0.7, style: { lineDash: [100, 0], lineDashOffset: 100 } },
+        { percent: 0.8, style: { fill: 'transparent' } },
+        { percent: 1, style: { fill: '#1a73e8' } }
+      ]
+    }
+  }))
+
+  chart.setOption({
+    graphic: { elements }
+  })
+})
+
+onUnmounted(() => {
+  chart?.dispose()
+})
+
+
 </script>
 
 <style scoped>
+.title-chart {
+  width: 100%;
+  height: 120px;
+}
+
+
 .menu-button{
     position: absolute;
     top: 20px;

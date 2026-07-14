@@ -1,5 +1,5 @@
 <template>
-  <main class="chat-main" ref="messageListRef">
+  <main class="chat-main" ref="messageListRef" @scroll="onScroll">
     <div class="chat-container">
       <!-- 空状态 -->
       <div v-if="messages.length === 0" class="empty-state">
@@ -58,7 +58,7 @@ defineProps({
   formatTime: { type: Function, default: () => '' }
 })
 
-defineEmits(['send-quick-question'])
+const emit = defineEmits(['send-quick-question', 'scroll-state'])
 
 const messageListRef = ref(null)
 
@@ -68,6 +68,13 @@ const scrollToBottom = () => {
   }
 }
 
+const onScroll = () => {
+  if (!messageListRef.value) return
+  const { scrollTop, scrollHeight, clientHeight } = messageListRef.value
+  const atBottom = scrollHeight - scrollTop - clientHeight < 10
+  emit('scroll-state', atBottom)
+}
+
 defineExpose({ scrollToBottom, messageListRef })
 </script>
 
@@ -75,7 +82,7 @@ defineExpose({ scrollToBottom, messageListRef })
 .chat-main {
   flex: 1;
   overflow-y: auto;
-  background: #f7f8fa;
+  background: var(--chat-bg, #f7f8fa);
   padding: 0 24px;
   position: relative;
 }
@@ -133,19 +140,19 @@ defineExpose({ scrollToBottom, messageListRef })
 
 .markdown-body {
   padding: 12px 18px;
-  background: #ffffff;
+  background: var(--chat-markdown-bg, #ffffff);
   border-radius: 12px;
   line-height: 1.7;
   font-size: 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   word-wrap: break-word;
   overflow-wrap: break-word;
-  color: #1a1a1a;
+  color: var(--chat-text, #1a1a1a);
 }
 
 .user-message {
-  background: #e8edff;
-  color: #1a1a1a;
+  background: var(--chat-user-bg, #e8edff);
+  color: var(--chat-text, #1a1a1a);
   border-radius: 12px 12px 4px 12px;
 }
 
@@ -155,7 +162,7 @@ defineExpose({ scrollToBottom, messageListRef })
 
 .message-time {
   font-size: 11px;
-  color: #8c8f9c;
+  color: var(--chat-text-muted, #8c8f9c);
   padding: 4px 8px 0;
   margin-top: 2px;
 }
@@ -174,12 +181,12 @@ defineExpose({ scrollToBottom, messageListRef })
 }
 
 .chat-main::-webkit-scrollbar-thumb {
-  background: #d0d5dd;
+  background: var(--chat-scrollbar, #d0d5dd);
   border-radius: 2px;
 }
 
 .chat-main::-webkit-scrollbar-thumb:hover {
-  background: #b0b3be;
+  background: var(--chat-scrollbar-hover, #b0b3be);
 }
 
 /* ========== Markdown 样式 ========== */
@@ -215,7 +222,7 @@ defineExpose({ scrollToBottom, messageListRef })
   margin: 8px 0;
   padding: 4px 14px;
   border-left: 4px solid #4f6ef7;
-  background: #f0f2f8;
+  background: var(--chat-blockquote-bg, #f0f2f8);
   border-radius: 0 4px 4px 0;
 }
 
@@ -225,24 +232,24 @@ defineExpose({ scrollToBottom, messageListRef })
 
 /* 行内代码 */
 .markdown-body :deep(code:not(pre code)) {
-  background: #f0f2f8;
+  background: var(--chat-inline-code-bg, #f0f2f8);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.9em;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  color: #1a1a1a;
+  color: var(--chat-text, #1a1a1a);
 }
 
 .user-message :deep(code:not(pre code)) {
   background: rgba(79, 110, 247, 0.12);
 }
 
-/* 代码块 */
+/* 代码块：顶部留空给语言标签 */
 .markdown-body :deep(pre) {
   position: relative;
-  background: #0d1117;
+  background: var(--chat-code-bg, #0d1117);
   border-radius: 8px;
-  padding: 16px;
+  padding: 36px 16px 16px;
   margin: 8px 0;
   overflow-x: auto;
   font-size: 13px;
@@ -254,27 +261,29 @@ defineExpose({ scrollToBottom, messageListRef })
   padding: 0 !important;
   border-radius: 0 !important;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  color: #e6edf3;
+  color: var(--chat-code-text, #e6edf3);
   font-size: 13px;
   display: block;
 }
 
-/* 代码块语言标签 */
+/* 代码块语言标签 - 左上角，更明显 */
 .markdown-body :deep(pre)::before {
   content: attr(data-lang);
   position: absolute;
   top: 8px;
-  right: 12px;
-  font-size: 11px;
-  color: #8b949e;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 2px 10px;
+  left: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--chat-code-label, #8b949e);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 3px 12px;
   border-radius: 4px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   text-transform: lowercase;
   pointer-events: none;
   user-select: none;
+  line-height: 1.4;
 }
 
 .markdown-body :deep(pre[data-lang=""])::before {

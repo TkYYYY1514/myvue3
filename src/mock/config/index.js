@@ -2,7 +2,8 @@
 export const rolePermissionsMap = {
     R_SUPER: [
         'dashboard:view', 'template:view', 'system:view', 'user:view', 'role:view',
-        'user:create', 'user:update', 'user:delete'
+         'DataAnalysis:view',
+        'user:create', 'user:update', 'user:delete',
     ],
     R_ADMIN: ['dashboard:view', 'template:view', 'system:view', 'user:view'],
     R_USER: ['dashboard:view', 'template:view'],
@@ -15,6 +16,7 @@ export const permissionNameMap = {
     'template:view': '查看模板中心',
     'system:view': '查看系统管理',
     'user:view': '查看用户管理',
+    'DataAnalysis:view': '查看数据分析',
     'user:create': '创建用户',
     'user:update': '编辑用户',
     'user:delete': '删除用户',

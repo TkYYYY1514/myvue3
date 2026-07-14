@@ -90,8 +90,15 @@ export const asyncRouteTemplates ={
                  component: () => import('@/views/system/role.vue'), 
                  meta: { title: '角色管理',
                     permission: 'role:view'
-                  } 
-            } 
+                  }
+            } ,
+            {   path: 'DataAnalysis',
+                name:'DataAnalysis',
+                component: () => import('@/views/system/DataAnalysis/index.vue'), 
+                 meta: { title: '数据分析',
+                    permission: 'DataAnalysis:view'
+                  }
+            }
         ]
     }
 }
