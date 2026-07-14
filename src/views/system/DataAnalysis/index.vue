@@ -14,8 +14,8 @@
         :id="item.id"
       >
         <div class="chart-card">
-          <component
-            :is="item.component"
+          <ChartRenderer
+            :config="item.config"
             :data="item.chartData"
             :key="item.id"
           />
@@ -31,10 +31,9 @@ import { ElMessage } from 'element-plus'
 import { getRoles } from '@/api/role'
 import { getUserList } from '@/api/user'
 
-import GenderPieChart from './components/GenderPieChart.vue'
-import RoleBarChart from './components/RoleBarChart.vue'
-import GenderRole3DChart from './components/GenderRole3DChart.vue'
+import ChartRenderer from '@/components/common/ChartRenderer.vue'
 import ChartControls from './components/ChartControls.vue'
+import { chartConfigMap, idToChartType } from './chartConfigs'
 
 // ============ 加载状态 ============
 const loading = ref(true)
@@ -43,20 +42,6 @@ const loading = ref(true)
 const genderData = ref([])
 const roleData = ref([])
 const genderRoleData = ref([])
-
-// ============ 组件与数据映射（使用 id 作为唯一 key） ============
-const componentMap = {
-  pie: GenderPieChart,
-  bar: RoleBarChart,
-  '3d': GenderRole3DChart
-}
-
-// id → 图表类型映射（Gridstack 不保留自定义属性，所以用 id 确定类型）
-const idToChartType = {
-  pie: 'pie',
-  bar: 'bar',
-  chart3D: '3d'
-}
 
 // ============ GridStack 配置 ============
 const gridOptions = {
@@ -69,11 +54,11 @@ const gridOptions = {
   disableResize: false
 }
 
-// ============ 布局数据（只存 id、位置、大小、类型） ============
+// ============ 布局数据 ============
 const defaultLayout = [
-  { id: 'pie', x: 0, y: 0, w: 6, h: 4, type: 'pie' },
-  { id: 'bar', x: 6, y: 0, w: 6, h: 4, type: 'bar' },
-  { id: 'chart3D', x: 0, y: 4, w: 12, h: 7, type: '3d' }
+  { id: 'pie', x: 0, y: 0, w: 6, h: 4 },
+  { id: 'bar', x: 6, y: 0, w: 6, h: 4 },
+  { id: 'chart3D', x: 0, y: 4, w: 12, h: 7 }
 ]
 
 const layoutData = ref([...defaultLayout])
@@ -90,11 +75,9 @@ const visibleCharts = computed(() => {
   return layoutData.value.filter(item => visibleMap.value[item.id] !== false)
 })
 
-// ============ 可见图表列表（含组件和数据的派生列表） ============
+// ============ 可见图表列表（配置 + 数据的派生列表） ============
 const chartItems = computed(() => {
   return visibleCharts.value.map(item => {
-    // ⚠️ 关键修复：使用 item.id 而非 item.type 来确定组件和数据
-    // Gridstack 的 change 事件返回的 items 不包含自定义 type 属性
     const chartType = idToChartType[item.id] || 'pie'
 
     let chartData
@@ -118,28 +101,21 @@ const chartItems = computed(() => {
       y: item.y,
       w: item.w,
       h: item.h,
-      type: chartType,
-      component: componentMap[chartType] || GenderPieChart,
+      config: chartConfigMap[chartType],
       chartData
     }
   })
 })
 
-// ============ 布局变化（只保存必要的字段） ============
+// ============ 布局变化 ============
 const onLayoutChange = (newLayout) => {
-  // ⚠️ 重要：Gridstack 的 change 事件不包含自定义 type 属性，
-  // 所以需要从 defaultLayout 或 idToChartType 中恢复 type
-  const cleanLayout = newLayout.map(item => {
-    const defaultItem = defaultLayout.find(d => d.id === item.id)
-    return {
-      id: item.id,
-      x: item.x,
-      y: item.y,
-      w: item.w,
-      h: item.h,
-      type: idToChartType[item.id] || defaultItem?.type || item.id
-    }
-  })
+  const cleanLayout = newLayout.map(item => ({
+    id: item.id,
+    x: item.x,
+    y: item.y,
+    w: item.w,
+    h: item.h
+  }))
   layoutData.value = cleanLayout
   saveLayout(cleanLayout)
 }
@@ -147,17 +123,13 @@ const onLayoutChange = (newLayout) => {
 // ============ 保存布局 ============
 const saveLayout = (data) => {
   try {
-    const toSave = (data || layoutData.value).map(item => {
-      const defaultItem = defaultLayout.find(d => d.id === item.id)
-      return {
-        id: item.id,
-        x: item.x,
-        y: item.y,
-        w: item.w,
-        h: item.h,
-        type: idToChartType[item.id] || defaultItem?.type || item.id
-      }
-    })
+    const toSave = (data || layoutData.value).map(item => ({
+      id: item.id,
+      x: item.x,
+      y: item.y,
+      w: item.w,
+      h: item.h
+    }))
     localStorage.setItem('chart_layout', JSON.stringify(toSave))
   } catch (e) {
     console.warn('保存布局失败:', e)
@@ -173,20 +145,17 @@ const loadLayout = () => {
     const parsed = JSON.parse(saved)
     if (!Array.isArray(parsed) || parsed.length === 0) return
 
-    // 验证并恢复（使用 idToChartType 确保 type 正确）
     const validIds = defaultLayout.map(item => item.id)
     const filtered = parsed.filter(item => validIds.includes(item.id))
-    
+
     if (filtered.length > 0) {
-      const restored = filtered.map(item => ({
+      layoutData.value = filtered.map(item => ({
         id: item.id,
         x: item.x,
         y: item.y,
         w: item.w,
-        h: item.h,
-        type: idToChartType[item.id] || defaultLayout.find(d => d.id === item.id)?.type || item.id
+        h: item.h
       }))
-      layoutData.value = restored
     }
   } catch (e) {
     console.warn('加载布局失败:', e)
@@ -259,7 +228,7 @@ const fetchData = async () => {
 
     const roleNames = roleList.map(r => r.roleName)
     const genders = ['男', '女']
-    
+
     const result = []
     roleNames.forEach(role => {
       genders.forEach(gender => {
@@ -306,7 +275,7 @@ onMounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: #eae8e8;
   border-radius: 12px;
   padding: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
