@@ -108,16 +108,24 @@ const chartItems = computed(() => {
 })
 
 // ============ 布局变化 ============
-const onLayoutChange = (newLayout) => {
-  const cleanLayout = newLayout.map(item => ({
-    id: item.id,
-    x: item.x,
-    y: item.y,
-    w: item.w,
-    h: item.h
-  }))
-  layoutData.value = cleanLayout
-  saveLayout(cleanLayout)
+// ⚠️ Gridstack 的 change 事件只返回发生变化的 items，不是全部 items！
+// 必须将变化合并到现有 layoutData 中，而不是替换
+const onLayoutChange = (changedItems) => {
+  const updatedLayout = layoutData.value.map(existing => {
+    const changed = changedItems.find(item => item.id === existing.id)
+    if (changed) {
+      return {
+        id: changed.id,
+        x: changed.x,
+        y: changed.y,
+        w: changed.w,
+        h: changed.h
+      }
+    }
+    return { ...existing }
+  })
+  layoutData.value = updatedLayout
+  saveLayout(updatedLayout)
 }
 
 // ============ 保存布局 ============

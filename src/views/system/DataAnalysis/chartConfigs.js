@@ -161,7 +161,7 @@ export const genderRole3DConfig = {
           label: {
             show: true,
             formatter: '{c}',
-            textStyle: { fontSize: 12 }
+            fontSize: 12
           },
           data: [],
           itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 1 },
