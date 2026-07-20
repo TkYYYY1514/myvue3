@@ -77,8 +77,8 @@ provide('reloadPage', reloadPage)
 
 
 .el-main {
-  scrollbar-width: thin; /* 细滚动条 */
-  
+  /* scrollbar-width: thin; //细滚动条 */
+  overflow: hidden;  
 }
 
 

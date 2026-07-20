@@ -33,8 +33,8 @@
 
 
                 <el-button class="menu-button" 
-                @click="menuStore.toggleHidden()">
-                    <el-icon ><FullScreen /></el-icon>
+                        @click="menuStore.toggleHidden()">
+                        <el-icon ><FullScreen /></el-icon>
                     <!--  全屏 -->
                 </el-button>
 

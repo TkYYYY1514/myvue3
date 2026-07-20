@@ -1,27 +1,36 @@
 <template>
-  <div class="my-echarts" v-loading="loading" element-loading-text="数据加载中...">
-    <ChartControls @update:visible="handleVisibleChange" />
+  <!-- ===== 外层容器 ===== -->
+  <div class="page-wrapper">
+    <!-- ===== 按钮区域（固定，不滚动） ===== -->
+    <div class="btn-top">
+      <ChartControls @update:visible="handleVisibleChange"
+      @update:showCCC="handleShowCCC" />
+    </div>
 
-    <Gridstack
-      v-model:layout="layoutData"
-      :options="gridOptions"
-      class="gridstack-container"
-      @change="onLayoutChange"
-    >
-      <GridstackItem
-        v-for="item in chartItems"
-        :key="item.id"
-        :id="item.id"
+    <!-- ===== 滚动区域（只滚动图表） ===== -->
+    <div class="scroll-area" v-loading="loading" element-loading-text="数据加载中...">
+      <Gridstack
+        v-model:layout="layoutData"
+        :options="gridOptions"
+        class="gridstack-container"
+        @change="onLayoutChange"
       >
-        <div class="chart-card">
-          <ChartRenderer
-            :config="item.config"
-            :data="item.chartData"
-            :key="item.id"
-          />
-        </div>
-      </GridstackItem>
-    </Gridstack>
+        <GridstackItem
+          v-for="item in chartItems"
+          :key="item.id"
+          :id="item.id"
+        >
+          <div class="chart-card">
+            <ChartRenderer
+              :config="item.config"
+              :data="item.chartData"
+              :key="item.id"
+            />
+          </div>
+        </GridstackItem>
+      </Gridstack>
+    </div>
+    
   </div>
 </template>
 
@@ -35,6 +44,14 @@ import ChartRenderer from '@/components/common/ChartRenderer.vue'
 import ChartControls from './components/ChartControls.vue'
 import { chartConfigMap, idToChartType } from './chartConfigs'
 
+// 添加面板
+const showCCC = ref(false)
+
+const handleShowCCC = (val) => {
+  showCCC.value = val
+}
+
+
 // ============ 加载状态 ============
 const loading = ref(true)
 
@@ -45,20 +62,20 @@ const genderRoleData = ref([])
 
 // ============ GridStack 配置 ============
 const gridOptions = {
-  column: 12,
+  column: 100,
   margin: 10,
   cellHeight: 100,
   minRow: 1,
-  float: false,
+  float: true,
   disableDrag: false,
   disableResize: false
 }
 
 // ============ 布局数据 ============
 const defaultLayout = [
-  { id: 'pie', x: 0, y: 0, w: 6, h: 4 },
-  { id: 'bar', x: 6, y: 0, w: 6, h: 4 },
-  { id: 'chart3D', x: 0, y: 4, w: 12, h: 7 }
+  { id: 'pie', x: 0, y: 0, w: 60, h: 40 },
+  { id: 'bar', x: 60, y: 0, w: 60, h: 40 },
+  { id: 'chart3D', x: 0, y: 40, w: 70, h: 70 }
 ]
 
 const layoutData = ref([...defaultLayout])
@@ -108,8 +125,6 @@ const chartItems = computed(() => {
 })
 
 // ============ 布局变化 ============
-// ⚠️ Gridstack 的 change 事件只返回发生变化的 items，不是全部 items！
-// 必须将变化合并到现有 layoutData 中，而不是替换
 const onLayoutChange = (changedItems) => {
   const updatedLayout = layoutData.value.map(existing => {
     const changed = changedItems.find(item => item.id === existing.id)
@@ -266,12 +281,31 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.my-echarts {
-  width: 100%;
+/* ===== 外层容器：占满视口 ===== */
+.page-wrapper {
   height: 100%;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--el-bg-color, #f5f7fa);
+}
+
+/* ===== 按钮区域：固定高度，不滚动 ===== */
+.btn-top {
+  flex-shrink: 0;
+  padding: 3px 20px;
+  background: var(--el-bg-color, #fff);
+  border-bottom: 1px solid var(--el-border-color-light, #e4e7ed);
+  z-index: 10;
+}
+
+/* ===== 滚动区域：占满剩余空间，内部滚动 ===== */
+.scroll-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
   box-sizing: border-box;
-  min-height: 400px;
 }
 
 .gridstack-container {
@@ -309,8 +343,18 @@ onMounted(() => {
   opacity: 0.6;
 }
 
-html.dark .chart-card {
+/* ===== 深色模式 ===== */
+html.dark .page-wrapper {
   background: #1a1a2e;
+}
+
+html.dark .btn-top {
+  background: #1a1a2e;
+  border-bottom-color: #333;
+}
+
+html.dark .chart-card {
+  background: #000000;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
   border-color: transparent;
 }
