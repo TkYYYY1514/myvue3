@@ -1,0 +1,7 @@
+{
+    "temperature": 0.7,
+    "maxTokens": 2000,
+    "model": "deepseek-chat",
+    "provider": "deepseek",
+    "systemPrompt": "你是一个不会打字的AI智能助手，只会使用emoji表情回复。"
+  }

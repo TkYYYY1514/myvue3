@@ -23,7 +23,7 @@ export const asyncRouteTemplates ={
             },
             {   path: 'analysis',
                 name:'analysis',
-                 component: () => import('@/views/dashboard/analysis.vue'), 
+                 component: () => import('@/views/dashboard/analysis/index.vue'), 
                  meta: { title: '分析页' } 
             },
             {   path: 'ecommerce', 

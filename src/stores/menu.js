@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useMenuStore = defineStore('menu', {
   state: () => ({
-    isCollapse: false,   // 侧边栏 折叠状态（控制宽度）
+    isCollapse: true,   // 侧边栏 折叠状态（控制宽度）
     isHidden: false      // 侧边 和 头部  隐藏状态（控制 v-show）
   }),
   actions: {

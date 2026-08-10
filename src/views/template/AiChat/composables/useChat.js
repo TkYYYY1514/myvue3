@@ -126,12 +126,12 @@ export function useChat() {
   const sendMessage = async (scrollCallback) => {
     const text = inputText.value.trim()
     if (!text || isLoading.value) return
-
+  
     if (!isConnected.value) {
       ElMessage.error('后端服务未连接')
       return
     }
-
+  
     // 添加用户消息
     messages.value.push({
       role: 'user',
@@ -141,42 +141,64 @@ export function useChat() {
     inputText.value = ''
     scrollCallback?.()
     saveToLocal()
-
+  
     isLoading.value = true
-
-    // 添加 AI 消息占位
-    const aiIndex = messages.value.length
-    messages.value.push({
-      role: 'assistant',
-      content: '',
-      timestamp: new Date().toISOString()
-    })
-
-    // 准备对话历史 - 只保留有内容的消息
+  
+    // 准备对话历史
     const chatMessages = messages.value
       .filter(m => m.content)
       .map(m => ({ role: m.role, content: m.content }))
-
+  
     let saveTimer = null
-
+    let firstChunk = true  // ← 标记是否收到第一个字
+  
     // 发送流式请求
     await aiApi.sendMessageStream(
       chatMessages,
       systemPrompt.value,
       // 接收数据块
       (chunk) => {
-        messages.value[aiIndex].content += chunk
-
+        // ===== 收到第一个字时创建 AI 消息 =====
+        if (firstChunk) {
+          firstChunk = false
+          isLoading.value = false  // ← 关闭思考中
+          messages.value.push({
+            role: 'assistant',
+            content: chunk,
+            timestamp: new Date().toISOString()
+          })
+        } else {
+          // ===== 后续追加内容 =====
+          const lastMsg = messages.value[messages.value.length - 1]
+          if (lastMsg && lastMsg.role === 'assistant') {
+            lastMsg.content += chunk
+          }
+        }
+  
         clearTimeout(saveTimer)
         saveTimer = setTimeout(() => {
-          if (messages.value[aiIndex].content) {
+          const lastMsg = messages.value[messages.value.length - 1]
+          if (lastMsg && lastMsg.role === 'assistant' && lastMsg.content) {
             saveToLocal()
           }
         }, 2000)
+  
+        scrollCallback?.()
       },
       // 完成回调
       () => {
         isLoading.value = false
+        
+        // 如果整个流结束还没收到任何内容（保底）
+        if (firstChunk) {
+          firstChunk = false
+          messages.value.push({
+            role: 'assistant',
+            content: '抱歉，没有收到回复。',
+            timestamp: new Date().toISOString()
+          })
+        }
+        
         clearTimeout(saveTimer)
         saveToLocal()
         scrollCallback?.()
@@ -185,7 +207,23 @@ export function useChat() {
       (error) => {
         isLoading.value = false
         clearTimeout(saveTimer)
-        messages.value[aiIndex].content = '❌ 请求失败，请重试'
+        
+        // 如果还没有 AI 消息，创建一个错误消息
+        if (firstChunk) {
+          firstChunk = false
+          messages.value.push({
+            role: 'assistant',
+            content: '❌ 请求失败，请重试',
+            timestamp: new Date().toISOString()
+          })
+        } else {
+          // 如果已有 AI 消息，修改内容
+          const lastMsg = messages.value[messages.value.length - 1]
+          if (lastMsg && lastMsg.role === 'assistant') {
+            lastMsg.content = '❌ 请求失败，请重试'
+          }
+        }
+        
         saveToLocal()
         ElMessage.error(error)
         scrollCallback?.()

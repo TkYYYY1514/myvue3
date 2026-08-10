@@ -1,0 +1,23 @@
+### 健康检查
+GET http://localhost:3000/api/health
+
+### AI 对话（默认）
+POST http://localhost:3000/api/ai/chat
+Content-Type: application/json
+
+{
+  "messages": [
+    {"role": "user", "content": "你好"}
+  ]
+}
+
+### AI 对话（自定义系统提示词）
+POST http://localhost:3000/api/ai/chat
+Content-Type: application/json
+
+{
+  "messages": [
+    {"role": "user", "content": "今天天气怎么样？"}
+  ],
+  "systemPrompt": "你是一个天气预报助手，用简洁的语言回答天气问题。"
+}

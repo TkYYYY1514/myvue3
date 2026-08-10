@@ -18,27 +18,45 @@
         width: 100vw;
       }
 
-      /* ===== 全局细滚动条 ===== */
-      /* Firefox */
-      * {
-        scrollbar-width: thin;
-        scrollbar-color: #c0c4cc transparent;
-      }
-
+      /* ===== 滚动条只在滚动时显示 ===== */
       /* Chrome / Edge / Safari */
       *::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
+        width: 2px;
+        height: 2px;
+        background: transparent;
       }
+      
       *::-webkit-scrollbar-track {
         background: transparent;
       }
+      
+      /* 默认隐藏滑块 */
       *::-webkit-scrollbar-thumb {
-        background: #c0c4cc;
+        background: transparent;
         border-radius: 3px;
+        transition: background 0.3s;
       }
+      
+      /* 滚动时或悬停时显示 */
+      *:hover::-webkit-scrollbar-thumb,
+      *:focus::-webkit-scrollbar-thumb,
+      *:active::-webkit-scrollbar-thumb 
+      {
+        background: #c0c4cc;
+      }
+      
       *::-webkit-scrollbar-thumb:hover {
         background: #909399;
+      }
+
+      /* Firefox - 无法完全隐藏，只能变细 */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+      }
+      
+      *:hover {
+        scrollbar-color: #c0c4cc transparent;
       }
     </style>
   </head>

@@ -41,15 +41,24 @@
             <div class="message-time">{{ formatTime(msg.timestamp) }}</div>
           </div>
         </div>
+
+        <!-- ===== 思考中（显示秒数） ===== -->
+        <div v-if="isLoading" class="message-wrapper assistant">
+          <div class="message-content">
+            <div class="markdown-body thinking">
+              <span class="thinking-text">思考中 {{ thinkingSeconds }}s</span>
+            </div>
+          </div>
+        </div>
       </template>
     </div>
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 
-defineProps({
+const props = defineProps({
   messages: { type: Array, default: () => [] },
   systemPrompt: { type: String, default: '' },
   isLoading: { type: Boolean, default: false },
@@ -61,6 +70,36 @@ defineProps({
 const emit = defineEmits(['send-quick-question', 'scroll-state'])
 
 const messageListRef = ref(null)
+
+// ===== 思考秒数 =====
+const thinkingSeconds = ref(0)
+let timer = null
+
+// 监听 isLoading，开始/停止计时
+watch(
+  () => props.isLoading,
+  (newVal) => {
+    if (newVal) {
+      thinkingSeconds.value = 0
+      timer = setInterval(() => {
+        thinkingSeconds.value++
+      }, 1000)
+    } else {
+      if (timer) {
+        clearInterval(timer)
+        timer = null
+      }
+    }
+  }
+)
+
+// 组件卸载时清理
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer)
+    timer = null
+  }
+})
 
 const scrollToBottom = () => {
   if (messageListRef.value) {
@@ -77,6 +116,7 @@ const onScroll = () => {
 
 defineExpose({ scrollToBottom, messageListRef })
 </script>
+
 
 <style scoped>
 .chat-main {
@@ -394,4 +434,29 @@ defineExpose({ scrollToBottom, messageListRef })
 .markdown-body :deep(.hljs-built_in) {
   color: #ffa657;
 }
+
+
+/* ===== 思考中 ===== */
+.thinking {
+  padding: 12px 18px;
+  background: var(--chat-markdown-bg, #ffffff);
+  border-radius: 12px 12px 12px 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  min-height: 48px;
+}
+
+.thinking-text {
+  font-size: 14px;
+  color: var(--chat-text-muted, #8c8f9c);
+}
+
+/* 深色模式适配 */
+html.dark .thinking {
+  background: var(--chat-markdown-bg, #2d2d4a);
+}
+
+html.dark .thinking-text {
+  color: var(--chat-text-muted, #6b6f8a);
+}
+
 </style>

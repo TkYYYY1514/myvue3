@@ -24,13 +24,13 @@
       </el-button>
 
       <!-- 侧边添加面板 -->
-      <el-button 
+      <!-- <el-button 
           class="menu-button panel-btn" 
           :class="{ 'rotated': showCCC }"
           @click="togglePanel"
         >
         <el-icon><ArrowRight /></el-icon>
-      </el-button>
+      </el-button> -->
 
     </div>
   </div>

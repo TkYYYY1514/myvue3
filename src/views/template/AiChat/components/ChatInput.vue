@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { Promotion } from '@element-plus/icons-vue'
 
 const props = defineProps({
@@ -55,6 +55,27 @@ const autoResize = () => {
   }
 }
 
+const resetHeight = () => {
+  const el = inputRef.value?.textarea
+  if (el) {
+    el.style.height = 'auto'
+    // 重置为一行的高度
+    el.style.height = '44px'
+  }
+}
+
+// ===== 监听 modelValue 变化，为空时重置高度 =====
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (!newVal || newVal.trim() === '') {
+      nextTick(() => {
+        resetHeight()
+      })
+    }
+  }
+)
+
 const handleKeyDown = (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault()
@@ -62,7 +83,7 @@ const handleKeyDown = (e) => {
   }
 }
 
-defineExpose({ inputRef, autoResize })
+defineExpose({ inputRef, autoResize, resetHeight })
 </script>
 
 <style scoped>
@@ -109,14 +130,13 @@ defineExpose({ inputRef, autoResize })
   height: 44px;
   width: 44px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #4f6ef7, #7c3aed);
   border: none;
   color: #fff;
   font-size: 18px;
+  flex-shrink: 0;
 }
 
 .input-wrapper .el-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #3d5de0, #6d2ad6);
   transform: scale(1.02);
 }
 

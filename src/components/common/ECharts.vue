@@ -16,14 +16,14 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  width: {
-    type: [String, Number],
-    default: '400px'
-  },
-  height: {
-    type: [String, Number],
-    default: '400px'
-  },
+  // width: {
+  //   type: [String, Number],
+  //   default: '600px'
+  // },
+  // height: {
+  //   type: [String, Number],
+  //   default: '400px'
+  // },
   theme: {
     type: String,
     default: undefined

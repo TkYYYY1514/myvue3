@@ -29,6 +29,11 @@
           </div>
         </GridstackItem>
       </Gridstack>
+
+        <!-- ===== 右侧添加面板  (未实现)===== -->
+        <!-- <AddPanel class="right-panel" :class="{ open: showCCC }" /> -->
+
+        
     </div>
     
   </div>
@@ -39,7 +44,7 @@ import { ref, onMounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getRoles } from '@/api/role'
 import { getUserList } from '@/api/user'
-
+// import AddPanel from './components/AddPanel.vue'  // ← 导入
 import ChartRenderer from '@/components/common/ChartRenderer.vue'
 import ChartControls from './components/ChartControls.vue'
 import { chartConfigMap, idToChartType } from './chartConfigs'
@@ -61,21 +66,31 @@ const roleData = ref([])
 const genderRoleData = ref([])
 
 // ============ GridStack 配置 ============
+const GRID_COLUMN = 200
+const GRID_MARGIN = 10
+let cellSize = 6  // 默认值
+
+// 计算格子大小
+const calcCellSize = (containerWidth) => {
+  return (containerWidth - GRID_MARGIN * (GRID_COLUMN - 1)) / GRID_COLUMN
+}
+
+// 使用
 const gridOptions = {
-  column: 100,
-  margin: 10,
-  cellHeight: 100,
+  column: GRID_COLUMN,
+  margin: GRID_MARGIN,
+  cellHeight: cellSize,
   minRow: 1,
-  float: true,
+  float: false,
   disableDrag: false,
   disableResize: false
 }
 
 // ============ 布局数据 ============
 const defaultLayout = [
-  { id: 'pie', x: 0, y: 0, w: 60, h: 40 },
-  { id: 'bar', x: 60, y: 0, w: 60, h: 40 },
-  { id: 'chart3D', x: 0, y: 40, w: 70, h: 70 }
+  { id: 'pie', x: 0, y: 0, w: 50, h: 10 },
+  { id: 'bar', x: 60, y: 0, w: 50, h: 10 },
+  { id: 'chart3D', x: 0, y: 40, w: 40, h: 20 }
 ]
 
 const layoutData = ref([...defaultLayout])
@@ -358,4 +373,6 @@ html.dark .chart-card {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
   border-color: transparent;
 }
+
+
 </style>
