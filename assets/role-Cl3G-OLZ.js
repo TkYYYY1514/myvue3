@@ -1,0 +1,1 @@
+import{t as e}from"./request-Co5FCrYs.js";function t(t){return e({url:`/api/role/list`,method:`get`,params:t})}function n(){return e({url:`/api/permission/list`,method:`get`})}export{t as n,n as t};

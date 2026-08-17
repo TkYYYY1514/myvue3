@@ -1,0 +1,1 @@
+var e=window.APP_CONFIG||{},t=e.API_HOST||`121.41.23.8`,n=e.API_PORT||`3000`,r=`http://${t}:${n}`,i=`ws://${t}:${n}`,a=`${r}/api`;export{r as n,i as r,a as t};
