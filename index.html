@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="/myvue3/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>max</title>
+    <title>Win</title>
     <style>
       body {
         margin: 0;
@@ -17,17 +17,72 @@
         height: 100vh;
         width: 100vw;
       }
+
+      /* ===== 滚动条只在滚动时显示 ===== */
+      /* Chrome / Edge / Safari */
+      *::-webkit-scrollbar {
+        width: 2px;
+        height: 2px;
+        background: transparent;
+      }
+      
+      *::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      /* 默认隐藏滑块 */
+      *::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 3px;
+        transition: background 0.3s;
+      }
+      
+      /* 滚动时或悬停时显示 */
+      *:hover::-webkit-scrollbar-thumb,
+      *:focus::-webkit-scrollbar-thumb,
+      *:active::-webkit-scrollbar-thumb 
+      {
+        background: #c0c4cc;
+      }
+      
+      *::-webkit-scrollbar-thumb:hover {
+        background: #909399;
+      }
+
+      /* Firefox - 无法完全隐藏，只能变细 */
+      * {
+        /* 隐藏滚动条 */
+        scrollbar-width: none;
+        scrollbar-color: transparent transparent;
+      }
+      
+      *:hover {
+        scrollbar-color: #c0c4cc transparent;
+      }
     </style>
-    <script type="module" crossorigin src="/myvue3/assets/index-b6J5ZRo5.js"></script>
-    <link rel="modulepreload" crossorigin href="/myvue3/assets/_plugin-vue_export-helper-zVL9qZGT.js">
-    <link rel="modulepreload" crossorigin href="/myvue3/assets/chunk-DECur_0Z.js">
-    <link rel="modulepreload" crossorigin href="/myvue3/assets/runtime-dom.esm-bundler-B-Q0xbFs.js">
-    <link rel="modulepreload" crossorigin href="/myvue3/assets/es--ziNleKT.js">
-    <link rel="modulepreload" crossorigin href="/myvue3/assets/theme-CXpBIeBp.js">
-    <link rel="modulepreload" crossorigin href="/myvue3/assets/vue-router-BH7ZJff7.js">
-    <link rel="stylesheet" crossorigin href="/myvue3/assets/index-N63d4VD_.css">
+    <script type="module" crossorigin src="/myvue3/assets/index-C6WeT-dW.js"></script>
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/rolldown-runtime-QTnfLwEv.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/_plugin-vue_export-helper-D_sH7RcC.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/runtime-dom.esm-bundler-Cm_yMZ3k.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/pinia-Ca0ioOqw.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/useApi-CROJJdhE-CBEc1K6C.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/message-BX-ZgMAL.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/request-D7-N6sek.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/theme-BReeVzCA.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/message-box-tqaCpQ4p.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/sortable.esm-BA_RbSqc.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/permission-B9Th2Enf.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/vue-virtual-scroller-B6bx5i_j.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/install-CJy4xU-u.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/echarts-CbLfJcTg.js">
+    <link rel="modulepreload" crossorigin href="/myvue3/assets/ECharts-CNLaHzJA.js">
+    <link rel="stylesheet" crossorigin href="/myvue3/assets/permission-BZnWZspS.css">
+    <link rel="stylesheet" crossorigin href="/myvue3/assets/ECharts-C8W8BWUx.css">
+    <link rel="stylesheet" crossorigin href="/myvue3/assets/index-BADEfXuM.css">
   </head>
   <body>
     <div id="app"></div>
+    <!-- 全局配置（后端地址），优先于应用加载 -->
+    <script src="/myvue3/config.js"></script>
   </body>
 </html>

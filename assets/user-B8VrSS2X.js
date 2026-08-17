@@ -1,0 +1,1 @@
+import{t as e}from"./request-D7-N6sek.js";var t=t=>e({url:`/api/user/list`,method:`get`,params:t}),n=t=>e({url:`/api/user/adduser`,method:`post`,data:t}),r=t=>e({url:`/api/user/update`,method:`post`,data:t}),i=t=>e({url:`/api/user/deluser`,method:`post`,data:{id:t}});export{r as i,i as n,t as r,n as t};

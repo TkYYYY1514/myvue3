@@ -1,0 +1,1 @@
+import{R as e,d as t,m as n,t as r}from"./_plugin-vue_export-helper-D_sH7RcC.js";var i={class:`api-doc`},a=r({__name:`cards`,setup(r){return(r,a)=>(e(),n(`div`,i,[...a[0]||=[t(`iframe`,{src:`https://api-docs.deepseek.com/zh-cn/`,class:`deepseek-iframe`},null,-1)]]))}},[[`__scopeId`,`data-v-3acc8fbd`]]);export{a as default};
