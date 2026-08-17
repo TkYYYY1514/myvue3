@@ -109,6 +109,7 @@
 import{ref,onMounted} from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { API_BASE } from '@/config'
 import { inject } from 'vue'
 import {  FullScreen } from '@element-plus/icons-vue'
 const xo = inject('xx')
@@ -131,7 +132,7 @@ const sortState = ref({
 const fetchData = async()=>{
    loading.value = true
    try{
-       const res = await axios.get('/api/user/list',{
+       const res = await axios.get(`${API_BASE}/user/list`,{
            params:{
                page:currentPage.value,
                pageSize:pageSize.value,

@@ -1,8 +1,12 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { API_BASE_URL } from '@/config'
+
+// 开发环境走 Vite 代理（相对路径 /），生产部署走完整后端地址
+const baseURL = import.meta.env.DEV ? '/' : API_BASE_URL
 
 const service = axios.create({
-    baseURL: '/',
+    baseURL,
     timeout: 5000
 })
 

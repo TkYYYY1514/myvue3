@@ -16,5 +16,10 @@ export const API_BASE_URL = `http://${API_HOST}:${API_PORT}`
 // WebSocket 基础地址（如：ws://121.41.23.8:3000）
 export const WS_BASE_URL = `ws://${API_HOST}:${API_PORT}`
 
+// 接口请求基础路径（含 /api 前缀）
+// - 开发环境：走 Vite 代理（相对路径 /api，可避免跨域）
+// - 生产部署（GitHub Pages / 云服务器静态托管）：走完整后端地址
+export const API_BASE = import.meta.env.DEV ? '/api' : `${API_BASE_URL}/api`
+
 // 主机与端口（按需直接使用）
 export { API_HOST, API_PORT }

@@ -81,6 +81,7 @@
 import { ref, onMounted,computed  } from 'vue'
 import axios from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { API_BASE } from '@/config'
 import { inject } from 'vue'
 import {  FullScreen,Close  } from '@element-plus/icons-vue'
 import BaseForm from '@/components/common/BaseForm.vue'; 
@@ -101,7 +102,7 @@ const formRef = ref(null);
 const fetchData = async () => {
     loading.value = true
     try {
-        const res = await axios.get('/api/role/list')
+        const res = await axios.get(`${API_BASE}/role/list`)
       
         if (res.data.code === 200) {
             userData.value = res.data.data.list
@@ -159,7 +160,7 @@ const handleSubmit = async () => {
   try {
     submitLoading.value = true
     await formRef.value.validate();
-    const url = isEdit.value ? '/api/role/update' : '/api/role/add';
+    const url = isEdit.value ? `${API_BASE}/role/update` : `${API_BASE}/role/add`;
     const res = await axios.post(url, formData.value);
     
     if (res.data.code === 200) {
@@ -192,7 +193,7 @@ const handleDelete = async (row) => {
         )
         
         // 调用删除接口
-        const res = await axios.post('/api/role/delete', {
+        const res = await axios.post(`${API_BASE}/role/delete`, {
             roleId: row.roleId
         })
         

@@ -1,9 +1,8 @@
 // src/api/ai.js
 import request from '@/utils/request'
+import { API_BASE } from '@/config'
 
-// 统一走 Vite 代理，避免跨域问题
-// Vite 配置中已将 /api 代理到后端（地址见 public/config.js）
-const API_BASE = '/api'
+// 接口基础路径（开发环境走 Vite 代理，生产部署走完整后端地址，见 src/config/index.js）
 
 export const aiApi = {
   // 非流式 - 走 Vite 代理

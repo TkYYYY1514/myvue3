@@ -178,9 +178,11 @@ import { inject } from 'vue'
 import {  FullScreen,Download  } from '@element-plus/icons-vue'
 import { RecycleScroller } from 'vue-virtual-scroller'
 import * as XLSX from 'xlsx'
-import BaseForm from '@/components/common/BaseForm.vue'; 
+import BaseForm from '@/components/common/BaseForm.vue';
 import { userFormSchemas } from '@/utils/userForm';//表单及其配置
 import { getUserList, addUser, updateUser, deleteUser } from '@/api/user';//用户相关API
+import axios from 'axios'
+import { API_BASE } from '@/config'
 
 
 import { useMenuStore } from '@/stores/menu'
@@ -384,7 +386,7 @@ const handleSelectAll = async (checked) => {
                 loading.value = true
                 try {
                     // 请求所有数据（不分页或大分页）
-                    const res = await axios.get('/api/user/list', {
+                    const res = await axios.get(`${API_BASE}/user/list`, {
                         params: {
                             page: 1,
                             pageSize: total.value, // 获取全部
