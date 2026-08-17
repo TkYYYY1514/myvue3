@@ -5,7 +5,8 @@
       <div v-if="messages.length === 0" class="empty-state">
         <el-empty description="开始对话">
           <template #image>
-            <div class="empty-icon">💬</div>
+            <div class="empty-icon"><el-icon 
+              color= "#ffffff"><Comment /></el-icon></div>
           </template>
         </el-empty>
         <div v-if="systemPrompt" class="active-prompt">
@@ -43,13 +44,13 @@
         </div>
 
         <!-- ===== 思考中（显示秒数） ===== -->
-        <div v-if="isLoading" class="message-wrapper assistant">
+        <!-- <div v-if="isLoading" class="message-wrapper assistant">
           <div class="message-content">
             <div class="markdown-body thinking">
               <span class="thinking-text">思考中 {{ thinkingSeconds }}s</span>
             </div>
           </div>
-        </div>
+        </div> -->
       </template>
     </div>
   </main>
@@ -57,6 +58,7 @@
 
 <script setup>
 import { ref, watch, onUnmounted } from 'vue'
+import { Setting, Comment } from '@element-plus/icons-vue'
 
 const props = defineProps({
   messages: { type: Array, default: () => [] },

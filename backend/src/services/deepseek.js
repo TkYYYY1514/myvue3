@@ -35,7 +35,9 @@ export async function chatWithDeepSeek(messages,systemPrompt = null,
                 temperature: temperature,
                   // ↑ 温度（0-1），控制回答的随机性
                   // 0.1 = 更确定/保守，0.9 = 更随机/有创意
-                max_tokens:maxTokens
+                max_tokens:maxTokens,
+
+                thinking: { "type": "disabled" }  //思考模式关闭
             })
         })
 

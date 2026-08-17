@@ -98,11 +98,12 @@ import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import ECharts from '@/components/common/ECharts.vue'
 import { useWebSocket } from '@/composables/useWebSocket'
 import { ElMessage } from 'element-plus'
+import { API_BASE_URL, WS_BASE_URL } from '@/config'
 
 // ============================================
 //  1. WebSocket
 // ============================================
-const { isConnected, send, onMessage } = useWebSocket('ws://localhost:3000')
+const { isConnected, send, onMessage } = useWebSocket(WS_BASE_URL)
 
 // ============================================
 //  2. 实时数据存储
@@ -151,13 +152,13 @@ const customUpload = async (event) => {
   formData.append('image', file)
 
   try {
-    const response = await fetch('http://localhost:3000/api/upload', {
+    const response = await fetch(`${API_BASE_URL}/api/upload`, {
       method: 'POST',
       body: formData
     })
 
     const result = await response.json()
-    const fullUrl = `http://localhost:3000${result.data.url}`
+    const fullUrl = `${API_BASE_URL}${result.data.url}`
     console.log('📷 上传结果:', result)
 
     if (result.code === 0) {

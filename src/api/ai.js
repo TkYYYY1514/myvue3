@@ -2,7 +2,7 @@
 import request from '@/utils/request'
 
 // 统一走 Vite 代理，避免跨域问题
-// Vite 配置中已将 /api 代理到 http://localhost:3000
+// Vite 配置中已将 /api 代理到后端（地址见 public/config.js）
 const API_BASE = '/api'
 
 export const aiApi = {

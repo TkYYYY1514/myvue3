@@ -45,9 +45,8 @@ const server = http.createServer(app)
 initWebSocket(server)
 
 //启动
-server.listen(PORT,() => {
-    console.log(`后端运行在http://localhost:${PORT}`)
-    console.log(`ws运行在ws://localhost:${PORT}`)
-    
-    console.log(`健康检查:http://localhost:${PORT}/api/health`)
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`后端运行在 http://0.0.0.0:${PORT}`)
+    console.log(`ws 运行在 ws://0.0.0.0:${PORT}`)
+    console.log(`健康检查: http://0.0.0.0:${PORT}/api/health`)
 })

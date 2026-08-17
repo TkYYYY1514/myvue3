@@ -32,11 +32,12 @@ import { ElMessage } from 'element-plus'
 import StatusBar from './components/StatusBar.vue'
 import RealTimeChart from './components/RealTimeChart.vue'
 import ChatRoom from './components/ChatRoom.vue'
+import { API_BASE_URL, WS_BASE_URL } from '@/config'
 
 // ============================================
 //
 // ============================================
-// const { isConnected, send, onMessage } = useWebSocket('ws://localhost:3000')
+// const { isConnected, send, onMessage } = useWebSocket(WS_BASE_URL)
 
 // ============================================
 //  2. 实时数据存储
@@ -57,7 +58,7 @@ const latestData = ref({})
 const nickname = ref('用户' + Math.floor(Math.random() * 1000))
 
 //  连接时带上昵称  + WebSocket 连接
-const wsUrl = `ws://localhost:3000?nickname=${encodeURIComponent(nickname.value)}`
+const wsUrl = `${WS_BASE_URL}?nickname=${encodeURIComponent(nickname.value)}`
 const { isConnected, send, onMessage } = useWebSocket(wsUrl)
 
 
@@ -93,13 +94,13 @@ const handleSendImage = async (file) => {
   formData.append('image', file)
 
   try {
-    const response = await fetch('http://localhost:3000/api/upload', {
+    const response = await fetch(`${API_BASE_URL}/api/upload`, {
       method: 'POST',
       body: formData
     })
 
     const result = await response.json()
-    const fullUrl = `http://localhost:3000${result.data.url}`
+    const fullUrl = `${API_BASE_URL}${result.data.url}`
     console.log('📷 上传结果:', result)
 
     if (result.code === 0) {

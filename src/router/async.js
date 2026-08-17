@@ -95,7 +95,7 @@ export const asyncRouteTemplates ={
             {   path: 'DataAnalysis',
                 name:'DataAnalysis',
                 component: () => import('@/views/system/DataAnalysis/index.vue'), 
-                 meta: { title: '数据分析',
+                 meta: { title: '数据分析(Gridstack使用',
                     permission: 'DataAnalysis:view'
                   }
             }

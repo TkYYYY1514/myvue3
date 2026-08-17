@@ -56,7 +56,7 @@ export function useChat() {
   // ========== 核心状态 ==========
   const messages = ref([])
   const inputText = ref('')
-  const isLoading = ref(false)
+  // const isLoading = ref(false)  // ← 已注释：思考状态
   const isConnected = ref(false)
   const showSystemPrompt = ref(false)
   const systemPrompt = ref(localStorage.getItem('ai_system_prompt') || '')
@@ -125,13 +125,14 @@ export function useChat() {
   // ========== 消息发送 ==========
   const sendMessage = async (scrollCallback) => {
     const text = inputText.value.trim()
-    if (!text || isLoading.value) return
-  
+    // if (!text || isLoading.value) return  // ← 已注释：移除 isLoading 判断
+    if (!text) return
+
     if (!isConnected.value) {
       ElMessage.error('后端服务未连接')
       return
     }
-  
+
     // 添加用户消息
     messages.value.push({
       role: 'user',
@@ -141,17 +142,17 @@ export function useChat() {
     inputText.value = ''
     scrollCallback?.()
     saveToLocal()
-  
-    isLoading.value = true
-  
+
+    // isLoading.value = true  // ← 已注释：开启思考中
+
     // 准备对话历史
     const chatMessages = messages.value
       .filter(m => m.content)
       .map(m => ({ role: m.role, content: m.content }))
-  
+
     let saveTimer = null
     let firstChunk = true  // ← 标记是否收到第一个字
-  
+
     // 发送流式请求
     await aiApi.sendMessageStream(
       chatMessages,
@@ -161,7 +162,7 @@ export function useChat() {
         // ===== 收到第一个字时创建 AI 消息 =====
         if (firstChunk) {
           firstChunk = false
-          isLoading.value = false  // ← 关闭思考中
+          // isLoading.value = false  // ← 已注释：关闭思考中
           messages.value.push({
             role: 'assistant',
             content: chunk,
@@ -174,7 +175,7 @@ export function useChat() {
             lastMsg.content += chunk
           }
         }
-  
+
         clearTimeout(saveTimer)
         saveTimer = setTimeout(() => {
           const lastMsg = messages.value[messages.value.length - 1]
@@ -182,13 +183,13 @@ export function useChat() {
             saveToLocal()
           }
         }, 2000)
-  
+
         scrollCallback?.()
       },
       // 完成回调
       () => {
-        isLoading.value = false
-        
+        // isLoading.value = false  // ← 已注释：关闭思考中
+
         // 如果整个流结束还没收到任何内容（保底）
         if (firstChunk) {
           firstChunk = false
@@ -198,16 +199,16 @@ export function useChat() {
             timestamp: new Date().toISOString()
           })
         }
-        
+
         clearTimeout(saveTimer)
         saveToLocal()
         scrollCallback?.()
       },
       // 错误回调
       (error) => {
-        isLoading.value = false
+        // isLoading.value = false  // ← 已注释：关闭思考中
         clearTimeout(saveTimer)
-        
+
         // 如果还没有 AI 消息，创建一个错误消息
         if (firstChunk) {
           firstChunk = false
@@ -223,7 +224,7 @@ export function useChat() {
             lastMsg.content = '❌ 请求失败，请重试'
           }
         }
-        
+
         saveToLocal()
         ElMessage.error(error)
         scrollCallback?.()
@@ -272,7 +273,7 @@ export function useChat() {
     // 状态
     messages,
     inputText,
-    isLoading,
+    // isLoading,  // ← 已注释：不再导出
     isConnected,
     showSystemPrompt,
     systemPrompt,

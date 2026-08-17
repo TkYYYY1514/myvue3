@@ -14,7 +14,8 @@
   
       <!-- 右侧：在线人数 -->
       <div class="right">
-        <span class="online-count">{{ onlineCount }} 人在线</span>
+        <span style="font-size: 12px;">在线人数：</span>
+        <span class="online-count">{{ onlineCount }}</span>
       </div>
     </div>
   </template>
@@ -36,7 +37,10 @@
     font-size: 12px;
     padding: 12px 20px;
     border-radius: 1px;
-    border: 0.5px solid #a9a9c3b0;
+    border-top: 0.5px solid #a9a9c3b0;
+    border-left: 0.5px solid #a9a9c3b0;
+    border-right: 0.5px solid #a9a9c3b0;
+    border-bottom: none;
     flex-wrap: wrap;
   }
   
@@ -72,7 +76,7 @@
   }
   
   .online-count {
-    color: #51CF66;
+    color: #45e748;
     font-size: 12px;
   }
   </style>

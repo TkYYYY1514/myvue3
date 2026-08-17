@@ -24,11 +24,15 @@ export function initWebSocket(server){
         })
 
         //每次有连接就 单播图片
+        // 根据请求 Host 动态拼接图片地址，适配本地/云服务器部署
+        // （若经 Nginx 等反代且使用 HTTPS，可读 x-forwarded-proto）
+        const proto = req.headers['x-forwarded-proto'] || 'http'
+        const baseUrl = `${proto}://${req.headers.host}`
         ws.send(JSON.stringify({
             cmd: 'image',
             data: {
                 nickname: '管理员',
-                url: 'http://localhost:3000/uploads/image_1786332615752_9o3jnw.gif',
+                url: `${baseUrl}/uploads/image_1786332615752_9o3jnw.gif`,
                 time: new Date().toLocaleTimeString()
             }
         }))
@@ -109,7 +113,7 @@ function handMessage(ws,data){
                         time: new Date().toLocaleTimeString()
                     }
                 }
-                   // 🔥 加这三行日志
+                   //  三行日志
                 console.log('💬 收到聊天消息:', chatMsg)
                 console.log(' 当前在线客户端数:', clients.length)
                 console.log(' 客户端列表:', clients.map(c => c.ws.readyState))

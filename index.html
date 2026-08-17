@@ -51,7 +51,8 @@
 
       /* Firefox - 无法完全隐藏，只能变细 */
       * {
-        scrollbar-width: thin;
+        /* 隐藏滚动条 */
+        scrollbar-width: none;
         scrollbar-color: transparent transparent;
       }
       
@@ -62,6 +63,8 @@
   </head>
   <body>
     <div id="app"></div>
+    <!-- 全局配置（后端地址），优先于应用加载 -->
+    <script src="/config.js"></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
